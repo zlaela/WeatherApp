@@ -28,6 +28,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources true
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -49,7 +54,6 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation 'androidx.activity:activity-compose:1.7.0'
@@ -58,10 +62,12 @@ dependencies {
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
 
-    testImplementation "androidx.test:core:1.5.0"
-    testImplementation "androidx.arch.core:core-testing:2.2.0"
+    testImplementation "androidx.test:core:$android_test_core_version"
+    testImplementation "androidx.arch.core:core-testing:$core_testing_version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
-    testImplementation "org.mockito:mockito-junit-jupiter:3.5.11"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockito_jupiter_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
+    testImplementation "io.mockk:mockk:$mockk_version"
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
