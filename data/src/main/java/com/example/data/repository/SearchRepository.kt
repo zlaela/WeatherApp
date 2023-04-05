@@ -1,4 +1,4 @@
-package com.example.weatherapp.repository
+package com.example.data.repository
 
 class SearchRepository {
     fun search(someCity: String) {

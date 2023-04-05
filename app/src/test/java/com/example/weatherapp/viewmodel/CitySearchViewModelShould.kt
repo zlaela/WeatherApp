@@ -1,8 +1,8 @@
 package com.example.weatherapp.viewmodel
 
+import com.example.data.repository.SearchRepository
+import com.example.data.search.SearchState
 import com.example.weatherapp.ExecutionExtension
-import com.example.weatherapp.repository.SearchRepository
-import com.example.weatherapp.search.SearchState
 import com.example.weatherapp.validation.StringValidator
 import io.mockk.Called
 import io.mockk.every

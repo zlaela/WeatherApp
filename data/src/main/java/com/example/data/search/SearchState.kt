@@ -1,4 +1,4 @@
-package com.example.weatherapp.search
+package com.example.data.search
 
 sealed class SearchState {
     object ShowLoading: SearchState()
