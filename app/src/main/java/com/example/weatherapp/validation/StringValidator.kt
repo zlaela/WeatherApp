@@ -6,11 +6,18 @@ class StringValidator {
     private val cityPattern = Pattern.compile(CITY_REGEX)
     private val zipPattern = Pattern.compile(ZIP_REGEX)
 
-    fun validate(someCity: String): Boolean {
-        return (someCity.trim().isNotBlank()
-                && cityPattern.matcher(someCity).matches()
-                || zipPattern.matcher(someCity).matches())
-    }
+    fun validate(someCity: String): ValidationResult =
+        if (someCity.trim().isBlank()) {
+            ValidationResult.Invalid
+        } else {
+            if (cityPattern.matcher(someCity).matches()) {
+                ValidationResult.ValidCity
+            } else if (zipPattern.matcher(someCity).matches()) {
+                ValidationResult.ValidZip
+            } else {
+                ValidationResult.Invalid
+            }
+        }
 
     companion object {
         /**

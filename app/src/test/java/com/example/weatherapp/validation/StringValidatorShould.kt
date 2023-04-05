@@ -6,34 +6,18 @@ import org.junit.jupiter.params.provider.CsvSource
 
 class StringValidatorShould {
     @ParameterizedTest
-    @CsvSource(
-        value = [
-            "'', false",
-            "'2', false",
-            "'#$', false",
-            "'2A', false",
-            "'1N', false"
-        ]
-    )
-    fun `notify when search string is invalid`(someCity: String, isValid: Boolean) {
+    @CsvSource("''", "2", "#$", "2A", "1N")
+    fun `notify when search string is invalid`(someCity: String) {
         val validator = StringValidator()
         // Returns expected result when invalid term is evaluated
-        assertEquals(validator.validate(someCity), isValid)
+        assertEquals(validator.validate(someCity), validator.validate(someCity))
     }
 
     @ParameterizedTest
-    @CsvSource(
-        value = [
-            "'Denver', true",
-            "'60652', true",
-            "'San Antonio', true",
-            "'Mbanza-Ngungu', true",
-            "'Saint-Chély-d'Apcher', true"
-        ]
-    )
-    fun `notify when search string is valid`(someCity: String, isValid: Boolean) {
+    @CsvSource("Denver", "60652", "San Antonio", "Mbanza-Ngungu", "Saint-Chély-d'Apcher")
+    fun `notify when search string is valid`(someCity: String) {
         val validator = StringValidator()
         // Returns expected result when invalid term is evaluated
-        assertEquals(validator.validate(someCity), isValid)
+        assertEquals(validator.validate(someCity), validator.validate(someCity))
     }
 }

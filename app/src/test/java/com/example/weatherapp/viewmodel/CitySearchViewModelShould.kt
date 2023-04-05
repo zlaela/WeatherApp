@@ -4,6 +4,7 @@ import com.example.data.repository.SearchRepository
 import com.example.data.search.SearchState
 import com.example.weatherapp.ExecutionExtension
 import com.example.weatherapp.validation.StringValidator
+import com.example.weatherapp.validation.ValidationResult
 import io.mockk.Called
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
@@ -45,7 +46,7 @@ class CitySearchViewModelShould {
     @Test
     fun `search the repository with a valid string`() {
         // Set up valid search string
-        every { validator.validate(someCity) }.answers { true }
+        every { validator.validate(someCity) }.answers { ValidationResult.ValidCity }
 
         // When search is called in the view model
         citySearchViewModel.search(someCity)
@@ -59,7 +60,7 @@ class CitySearchViewModelShould {
     @Test
     fun `does not search the repository with an invalid string`() {
         // Set up invalid search string
-        every { validator.validate(someCity) }.answers { false }
+        every { validator.validate(someCity) }.answers { ValidationResult.Invalid }
 
         // When search is called in the view model
         citySearchViewModel.search(someCity)
@@ -71,7 +72,7 @@ class CitySearchViewModelShould {
     @Test
     fun `notify when the query is not valid`() {
         // Set up invalid search string
-        every { validator.validate(someCity) }.answers { false }
+        every { validator.validate(someCity) }.answers { ValidationResult.Invalid }
 
         // When search is called in the view model
         citySearchViewModel.search(someCity)
