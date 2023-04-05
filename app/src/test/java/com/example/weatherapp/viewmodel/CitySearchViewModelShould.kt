@@ -1,17 +1,20 @@
 package com.example.weatherapp.viewmodel
 
+import com.example.weatherapp.ExecutionExtension
 import com.example.weatherapp.repository.SearchRepository
+import com.example.weatherapp.search.SearchState
 import com.example.weatherapp.validation.StringValidator
 import io.mockk.Called
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(MockKExtension::class)
+@ExtendWith(ExecutionExtension::class, MockKExtension::class)
 class CitySearchViewModelShould {
     @RelaxedMockK
     private lateinit var validator: StringValidator
@@ -65,5 +68,18 @@ class CitySearchViewModelShould {
 
         // The repository is not called
         verify { repository wasNot Called }
+    }
+
+    @Test
+    fun `notify when the query is not valid`() {
+        val someCity = "some_city"
+        // Set up invalid search string
+        every { validator.validate(someCity) }.answers { false }
+
+        // When search is called in the view model
+        citySearchViewModel.search(someCity)
+
+        // The ui state is Invalid
+        assertEquals(SearchState.InvalidString, citySearchViewModel.searchLiveData.value)
     }
 }

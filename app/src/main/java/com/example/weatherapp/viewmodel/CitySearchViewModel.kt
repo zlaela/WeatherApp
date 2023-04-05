@@ -16,6 +16,8 @@ class CitySearchViewModel(
     fun search(userInput: String) {
         if (validator.validate(userInput)) {
             repository.search(userInput)
+        } else {
+            _liveData.value = SearchState.InvalidString
         }
     }
 }
