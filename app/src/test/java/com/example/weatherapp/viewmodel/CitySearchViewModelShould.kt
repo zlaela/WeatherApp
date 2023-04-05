@@ -2,6 +2,7 @@ package com.example.weatherapp.viewmodel
 
 import com.example.weatherapp.repository.SearchRepository
 import com.example.weatherapp.validation.StringValidator
+import io.mockk.Called
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
@@ -51,5 +52,18 @@ class CitySearchViewModelShould {
         verify(exactly = 1) {
             repository.search(someCity)
         }
+    }
+
+    @Test
+    fun `does not search the repository with an invalid string`() {
+        val someCity = "some_city"
+        // Set up invalid search string
+        every { validator.validate(someCity) }.answers { false }
+
+        // When search is called in the view model
+        citySearchViewModel.search(someCity)
+
+        // The repository is not called
+        verify { repository wasNot Called }
     }
 }
