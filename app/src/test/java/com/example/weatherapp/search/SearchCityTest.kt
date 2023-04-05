@@ -4,6 +4,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.example.weatherapp.ExecutionExtension
+import com.example.weatherapp.repository.SearchRepository
 import com.example.weatherapp.validation.StringValidator
 import com.example.weatherapp.viewmodel.CitySearchViewModel
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -27,7 +28,8 @@ class SearchCityTest {
     @BeforeEach
     fun setUp() {
         val validator = StringValidator()
-        val viewModel = CitySearchViewModel(validator)
+        val repository = SearchRepository()
+        val viewModel = CitySearchViewModel(repository, validator)
         uiController = SpyUiController().also { uiController ->
             uiController.viewModel = viewModel
         }
