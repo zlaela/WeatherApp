@@ -24,6 +24,8 @@ class CitySearchViewModelShould {
 
     private lateinit var citySearchViewModel: CitySearchViewModel
 
+    private val someCity = "some_city"
+
     @BeforeEach
     fun setUp() {
         citySearchViewModel = CitySearchViewModel(repository, validator)
@@ -31,8 +33,6 @@ class CitySearchViewModelShould {
 
     @Test
     fun `validate the search string`() {
-        val someCity = "some_city"
-
         // When search is called in the view model
         citySearchViewModel.search(someCity)
 
@@ -44,7 +44,6 @@ class CitySearchViewModelShould {
 
     @Test
     fun `search the repository with a valid string`() {
-        val someCity = "some_city"
         // Set up valid search string
         every { validator.validate(someCity) }.answers { true }
 
@@ -59,7 +58,6 @@ class CitySearchViewModelShould {
 
     @Test
     fun `does not search the repository with an invalid string`() {
-        val someCity = "some_city"
         // Set up invalid search string
         every { validator.validate(someCity) }.answers { false }
 
@@ -72,7 +70,6 @@ class CitySearchViewModelShould {
 
     @Test
     fun `notify when the query is not valid`() {
-        val someCity = "some_city"
         // Set up invalid search string
         every { validator.validate(someCity) }.answers { false }
 
