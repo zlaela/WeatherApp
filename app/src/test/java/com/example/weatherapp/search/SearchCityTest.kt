@@ -7,11 +7,18 @@ import com.example.data.api.GeoApi
 import com.example.data.repository.SearchRepository
 import com.example.data.search.SearchState
 import com.example.weatherapp.ExecutionExtension
+import com.example.weatherapp.TestCoroutineDispatchers
 import com.example.weatherapp.validation.StringValidator
 import com.example.weatherapp.viewmodel.CitySearchViewModel
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,6 +34,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 class SearchCityTest {
     @RelaxedMockK
     private lateinit var geoApi: GeoApi
+
+    @MockK
+    private lateinit var locationDeferred: Deferred<List<String>>
+
     private lateinit var uiController: SpyUiController
 
     private val showLoading = SearchState.ShowLoading
@@ -36,7 +47,9 @@ class SearchCityTest {
     fun setUp() {
         val validator = StringValidator()
         val repository = SearchRepository(geoApi)
-        val viewModel = CitySearchViewModel(repository, validator)
+        val dispatchers = TestCoroutineDispatchers()
+        val viewModel = CitySearchViewModel(dispatchers, repository, validator)
+
         uiController = SpyUiController().also { uiController ->
             uiController.viewModel = viewModel
         }
@@ -44,17 +57,20 @@ class SearchCityTest {
         uiController.onCreate()
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `performs search for a given input`() {
+    fun `performs search for a given input`() = runTest {
         val userInput = "someCity"
         val cities = listOf("someCityMatch")
         val results = SearchState.Results(cities)
 
         // Simulate API call
-        every { geoApi.searchCity(userInput) }.answers { cities }
+        coEvery { geoApi.searchCityAsync(userInput) }.returns(locationDeferred)
+        coEvery { locationDeferred.await() }.answers { cities }
 
         // When the ui controller queries the repository
         uiController.search(userInput)
+        advanceUntilIdle()
 
         // Verify that the UI state is as expected
         val expectedUiStates = listOf(showLoading, results, hideLoading)
@@ -70,7 +86,7 @@ class SearchCityTest {
         override val lifecycle: Lifecycle
             get() = lifecycleRegistry
 
-        fun search(userInput: String) {
+        fun search(userInput: String) = runBlocking {
             viewModel.search(userInput)
         }
 
