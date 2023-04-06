@@ -1,6 +1,8 @@
 package com.example.data.repository
 
 import com.example.data.api.GeoApi
+import com.example.data.api.response.city.Cities
+import com.example.data.api.response.city.City
 import com.example.data.exception.HttpException
 import com.example.data.search.SearchState
 import io.mockk.coEvery
@@ -18,11 +20,16 @@ import org.junit.jupiter.api.extension.ExtendWith
 class SearchRepositoryShould {
     @RelaxedMockK
     private lateinit var geoApi: GeoApi
-
     @MockK
-    private lateinit var locationDeferred: Deferred<List<String>>
+    private lateinit var citiesDeferred: Deferred<Cities>
+    @MockK
+    private lateinit var cityDeferred: Deferred<City>
 
     private lateinit var repository: SearchRepository
+
+    private val cities: Cities = Cities()
+    private val city1 = City("Chicago", 41.8755616, -87.6244212, "Illinois", "US")
+    private val city2 = City("Chicago", -33.71745, 18.9963167, "Western Cape", "ZA")
 
     @BeforeEach
     fun setUp() {
@@ -32,33 +39,32 @@ class SearchRepositoryShould {
     @Test
     fun `return locations when search succeeds`() = runBlocking {
         val someCity = "someCity"
-        val matches = listOf("City 1", "City 2")
+        cities.addAll(listOf(city1, city2))
 
         // Geo Api search for a city
-        coEvery { geoApi.searchCityAsync(someCity) }.coAnswers { locationDeferred }
-        coEvery { locationDeferred.await() }.coAnswers { matches }
+        coEvery { geoApi.searchCityAsync(someCity) }.coAnswers { citiesDeferred }
+        coEvery { citiesDeferred.await() }.coAnswers { cities }
 
         // When the search is called with a term
         val expectedResult = repository.searchCity(someCity)
 
         // The repository returns matching cities
-        assertEquals(expectedResult, SearchState.Results(matches))
+        assertEquals(expectedResult, SearchState.CitiesResult(cities))
     }
 
     @Test
     fun `return location when search by zip succeeds`() = runBlocking {
         val someZip = "60652"
-        val match = listOf("Chicago")
 
         // Geo Api search for a city
-        coEvery { geoApi.searchZipAsync(someZip) }.coAnswers { locationDeferred }
-        coEvery { locationDeferred.await() }.coAnswers { match }
+        coEvery { geoApi.searchZipAsync(someZip) }.coAnswers { cityDeferred }
+        coEvery { cityDeferred.await() }.coAnswers { city1 }
 
         // When the search is called with a term
         val expectedResult = repository.searchZip(someZip)
 
         // The repository returns matching cities
-        assertEquals(expectedResult, SearchState.Results(match))
+        assertEquals(expectedResult, SearchState.ZipResult(city1))
     }
 
     @Test

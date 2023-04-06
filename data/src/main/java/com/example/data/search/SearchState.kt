@@ -1,9 +1,13 @@
 package com.example.data.search
 
+import com.example.data.api.response.city.Cities
+import com.example.data.api.response.city.City
+
 sealed class SearchState {
-    object ShowLoading: SearchState()
-    object HideLoading: SearchState()
-    object InvalidString: SearchState()
-    data class Results(val results: List<String>): SearchState()
+    object ShowLoading : SearchState()
+    object HideLoading : SearchState()
+    object InvalidString : SearchState()
+    data class CitiesResult(val results: Cities) : SearchState()
+    data class ZipResult(val results:City) : SearchState()
     data class Failure(val reason: String) : SearchState()
 }
