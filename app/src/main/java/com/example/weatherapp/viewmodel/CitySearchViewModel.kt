@@ -14,10 +14,12 @@ class CitySearchViewModel(
     val searchLiveData: LiveData<SearchState> = _liveData
 
     fun search(userInput: String) {
-        when (validator.validate(userInput)) {
-            ValidationResult.ValidCity,
-            ValidationResult.ValidZip -> repository.search(userInput)
-            else -> _liveData.value = SearchState.InvalidString
+        _liveData.value = SearchState.ShowLoading
+        _liveData.value = when (validator.validate(userInput)) {
+            is ValidationResult.ValidCity,
+            is ValidationResult.ValidZip -> repository.search(userInput)
+            is ValidationResult.Invalid -> SearchState.InvalidString
         }
+        _liveData.value = SearchState.HideLoading
     }
 }
