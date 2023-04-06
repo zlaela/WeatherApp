@@ -4,7 +4,6 @@ buildscript {
         core_testing_version = '2.2.0'
         compose_version = '1.4.0'
         coroutines_version = '1.6.4'
-        coroutines_test_version = '1.6.1'
         junit_version = '5.8.2'
         mockito_jupiter_version = '3.5.11'
         mockk_version = "1.13.4"
