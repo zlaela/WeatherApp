@@ -44,6 +44,10 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
 
+    // Moshi
+    implementation "com.squareup.moshi:moshi:$moshi_version"
+    implementation "com.squareup.moshi:moshi-adapters:$moshi_version"
+
     // Testing
     testImplementation "androidx.test:core:$android_test_core_version"
     testImplementation "androidx.arch.core:core-testing:$core_testing_version"
