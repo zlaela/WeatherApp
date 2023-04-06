@@ -5,4 +5,5 @@ sealed class SearchState {
     object HideLoading: SearchState()
     object InvalidString: SearchState()
     data class Results(val results: List<String>): SearchState()
+    data class Failure(val reason: String) : SearchState()
 }
