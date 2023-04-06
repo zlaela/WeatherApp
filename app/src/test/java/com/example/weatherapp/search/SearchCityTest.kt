@@ -5,7 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.example.data.api.GeoApi
 import com.example.data.api.response.city.Cities
-import com.example.data.api.response.city.City
+import com.example.data.api.response.city.CityItem
 import com.example.data.repository.SearchRepository
 import com.example.data.search.SearchState
 import com.example.weatherapp.ExecutionExtension
@@ -46,8 +46,8 @@ class SearchCityTest {
     private val hideLoading = SearchState.HideLoading
 
     private val cities: Cities = Cities()
-    private val city1 = City("Chicago", 41.8755616, -87.6244212, "Illinois", "US")
-    private val city2 = City("Chicago", -33.71745, 18.9963167, "Western Cape", "ZA")
+    private val city1 = CityItem("Chicago", 41.8755616, -87.6244212, "Illinois", "US")
+    private val city2 = CityItem("Chicago", -33.71745, 18.9963167, "Western Cape", "ZA")
 
     @BeforeEach
     fun setUp() {
