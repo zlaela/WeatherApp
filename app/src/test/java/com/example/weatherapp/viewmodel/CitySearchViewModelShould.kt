@@ -3,13 +3,16 @@ package com.example.weatherapp.viewmodel
 import com.example.data.repository.SearchRepository
 import com.example.data.search.SearchState
 import com.example.weatherapp.ExecutionExtension
+import com.example.weatherapp.TestCoroutineDispatchers
 import com.example.weatherapp.validation.StringValidator
 import com.example.weatherapp.validation.ValidationResult
 import io.mockk.Called
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -29,11 +32,12 @@ class CitySearchViewModelShould {
 
     @BeforeEach
     fun setUp() {
-        citySearchViewModel = CitySearchViewModel(repository, validator)
+        val dispatchers = TestCoroutineDispatchers()
+        citySearchViewModel = CitySearchViewModel(dispatchers, repository, validator)
     }
 
     @Test
-    fun `validate the search string`() {
+    fun `validate the search string`() = runBlocking {
         // When search is called in the view model
         citySearchViewModel.search(someCity)
 
@@ -52,7 +56,7 @@ class CitySearchViewModelShould {
         citySearchViewModel.search(someCity)
 
         // The repository performs a search with the given string
-        verify(exactly = 1) {
+        coVerify(exactly = 1) {
             repository.search(someCity)
         }
     }
@@ -78,7 +82,6 @@ class CitySearchViewModelShould {
         citySearchViewModel.search(someCity)
 
         // The ui state is Invalid
-        // TODO: figure out why this doesn't return SearchState.InvalidString
-        assertEquals(SearchState.HideLoading, citySearchViewModel.searchLiveData.value)
+        assertEquals(SearchState.InvalidString, citySearchViewModel.searchLiveData.value)
     }
 }
