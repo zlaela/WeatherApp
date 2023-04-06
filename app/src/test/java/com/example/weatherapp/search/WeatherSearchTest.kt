@@ -3,6 +3,7 @@ package com.example.weatherapp.search
 import androidx.lifecycle.Observer
 import com.example.data.domain.City
 import com.example.data.domain.CurrentWeather
+import com.example.data.repository.WeatherSearchRepository
 import com.example.data.search.WeatherResult
 import com.example.weatherapp.ExecutionExtension
 import com.example.weatherapp.TestCoroutineDispatchers
@@ -36,7 +37,8 @@ class WeatherSearchTest {
     @BeforeEach
     fun setUp() {
         val dispatchers = TestCoroutineDispatchers()
-        weatherSearchViewModel = WeatherSearchViewModel(dispatchers)
+        val weatherRepository = WeatherSearchRepository()
+        weatherSearchViewModel = WeatherSearchViewModel(dispatchers, weatherRepository)
     }
 
     @Test
