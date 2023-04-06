@@ -3,6 +3,7 @@ package com.example.weatherapp.search
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import com.example.data.repository.SearchRepository
 import com.example.data.search.SearchState
 import com.example.weatherapp.ExecutionExtension
 import com.example.weatherapp.validation.StringValidator
@@ -28,7 +29,7 @@ class SearchCityTest {
     @BeforeEach
     fun setUp() {
         val validator = StringValidator()
-        val repository = com.example.data.repository.SearchRepository()
+        val repository = SearchRepository()
         val viewModel = CitySearchViewModel(repository, validator)
         uiController = SpyUiController().also { uiController ->
             uiController.viewModel = viewModel
