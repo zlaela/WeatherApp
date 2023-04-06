@@ -1,6 +1,7 @@
 package com.example.data.repository
 
 import com.example.data.api.GeoApi
+import com.example.data.exception.HttpException
 import com.example.data.search.SearchState
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -29,7 +30,7 @@ class SearchRepositoryShould {
     }
 
     @Test
-    fun `return location when search succeeds`() = runBlocking {
+    fun `return locations when search succeeds`() = runBlocking {
         val someCity = "someCity"
         val matches = listOf("City 1", "City 2")
 
@@ -38,9 +39,36 @@ class SearchRepositoryShould {
         coEvery { locationDeferred.await() }.coAnswers { matches }
 
         // When the search is called with a term
-        val expectedResult = repository.search(someCity)
+        val expectedResult = repository.searchCity(someCity)
 
         // The repository returns matching cities
         assertEquals(expectedResult, SearchState.Results(matches))
+    }
+
+    @Test
+    fun `return location when search by zip succeeds`() = runBlocking {
+        val someZip = "60652"
+        val match = listOf("Chicago")
+
+        // Geo Api search for a city
+        coEvery { geoApi.searchZipAsync(someZip) }.coAnswers { locationDeferred }
+        coEvery { locationDeferred.await() }.coAnswers { match }
+
+        // When the search is called with a term
+        val expectedResult = repository.searchZip(someZip)
+
+        // The repository returns matching cities
+        assertEquals(expectedResult, SearchState.Results(match))
+    }
+
+    @Test
+    fun `return failure when API exception occurs`() = runBlocking {
+        coEvery { geoApi.searchZipAsync("") }.throws(HttpException())
+
+        // When the search is called with a term
+        val expectedResult = repository.searchZip("")
+
+        // The repository returns matching cities
+        assertEquals(expectedResult, SearchState.Failure("Failed"))
     }
 }

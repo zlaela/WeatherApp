@@ -57,7 +57,7 @@ class CitySearchViewModelShould {
 
         // The repository performs a search with the given string
         coVerify(exactly = 1) {
-            repository.search(someCity)
+            repository.searchCity(someCity)
         }
     }
 

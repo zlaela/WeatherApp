@@ -19,9 +19,10 @@ class CitySearchViewModel(
 
     fun search(userInput: String) {
         when (validator.validate(userInput)) {
-            is ValidationResult.ValidCity,
+            is ValidationResult.ValidCity ->
+                viewModelScope.launch { asyncSearch { repository.searchCity(userInput) } }
             is ValidationResult.ValidZip ->
-                viewModelScope.launch { asyncSearch { repository.search(userInput) } }
+                viewModelScope.launch { asyncSearch { repository.searchZip(userInput) } }
             is ValidationResult.Invalid -> _liveData.value = SearchState.InvalidString
         }
     }
