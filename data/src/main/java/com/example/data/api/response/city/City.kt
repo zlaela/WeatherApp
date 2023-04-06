@@ -3,10 +3,12 @@ package com.example.data.api.response.city
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+class Cities : ArrayList<City>()
+
 @JsonClass(generateAdapter = true)
 data class City(
     @Json(name = "name")
-    val name: String?,
+    val name: String,
     @Json(name = "lat")
     val lat: Double?,
     @Json(name = "lon")
