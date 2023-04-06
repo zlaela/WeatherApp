@@ -19,7 +19,7 @@ class SearchRepositoryShould {
 
     @BeforeEach
     fun setUp() {
-        repository = SearchRepository()
+        repository = SearchRepository(geoApi)
     }
 
     @Test
