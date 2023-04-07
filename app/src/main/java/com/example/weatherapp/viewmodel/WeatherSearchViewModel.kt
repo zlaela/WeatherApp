@@ -17,7 +17,6 @@ class WeatherSearchViewModel(
     val weatherLiveData: LiveData<WeatherResult> = _weatherLiveData
 
     fun getWeatherFor(someCity: City) {
-        _weatherLiveData.value = WeatherResult.ShowLoading
         viewModelScope.launch {
             asyncSearch { weatherRepository.getCurrentWeather(someCity) }
         }
