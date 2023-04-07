@@ -1,7 +1,8 @@
 package com.example.data.repository
 
 import com.example.data.domain.City
+import com.example.data.search.WeatherResult
 
 interface WeatherRepository {
-    fun getCurrentWeather(someCity: City)
+    suspend fun getCurrentWeather(someCity: City): WeatherResult
 }
