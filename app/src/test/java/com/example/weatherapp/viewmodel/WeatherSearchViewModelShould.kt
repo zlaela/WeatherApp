@@ -34,4 +34,13 @@ class WeatherSearchViewModelShould {
         // The repository performs a search for the given city
         coVerify (exactly = 1) { weatherRepository.getCurrentWeather(someCity) }
     }
+
+    @Test
+    fun `perform forecast search`() {
+        // When getForecast() is called in the view model
+        weatherViewModel.getForecast(someCity)
+
+        // The repository performs a search for the given city
+        coVerify (exactly = 1) { weatherRepository.getForecast(someCity) }
+    }
 }

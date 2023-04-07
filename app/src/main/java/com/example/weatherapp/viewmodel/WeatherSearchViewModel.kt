@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 class WeatherSearchViewModel(
     private val dispatchers: CoroutineDispatchers,
     private val weatherRepository: WeatherRepository
-): CoroutineViewModel(dispatchers) {
+) : CoroutineViewModel(dispatchers) {
 
     private val _weatherLiveData = MutableLiveData<WeatherResult>()
     val weatherLiveData: LiveData<WeatherResult> = _weatherLiveData
@@ -19,12 +19,25 @@ class WeatherSearchViewModel(
     fun getWeatherFor(someCity: City) {
         _weatherLiveData.value = WeatherResult.ShowLoading
         viewModelScope.launch {
-            launch(dispatchers.background) {
-                val result = weatherRepository.getCurrentWeather(someCity)
-                launch(dispatchers.ui) {
-                    _weatherLiveData.value = result
-                    _weatherLiveData.value = WeatherResult.HideLoading
-                }
+            asyncSearch { weatherRepository.getCurrentWeather(someCity) }
+        }
+    }
+
+    fun getForecast(someCity: City) {
+        viewModelScope.launch {
+            asyncSearch { weatherRepository.getForecast(someCity) }
+        }
+    }
+
+    private fun asyncSearch(doAsync: suspend () -> WeatherResult) {
+        _weatherLiveData.value = WeatherResult.ShowLoading
+        launch(dispatchers.background) {
+            // on background thread
+            val result = doAsync()
+            // on ui thread
+            launch(dispatchers.ui) {
+                _weatherLiveData.value = result
+                _weatherLiveData.value = WeatherResult.HideLoading
             }
         }
     }
