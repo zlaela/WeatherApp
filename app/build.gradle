@@ -74,6 +74,9 @@ dependencies {
     // DataStore
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
+    // Location services
+    implementation "com.google.android.gms:play-services-location:21.0.1"
+
     testImplementation "androidx.test:core:$android_test_core_version"
     testImplementation "androidx.arch.core:core-testing:$core_testing_version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
