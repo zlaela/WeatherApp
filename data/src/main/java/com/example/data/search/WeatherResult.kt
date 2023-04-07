@@ -6,5 +6,5 @@ sealed class WeatherResult {
     object ShowLoading : WeatherResult()
     object HideLoading : WeatherResult()
     data class Success(val locationWeather: CurrentWeather) : WeatherResult()
-
+    data class Failure(val reason: String) : WeatherResult()
 }
