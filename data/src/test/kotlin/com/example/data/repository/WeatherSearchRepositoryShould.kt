@@ -3,8 +3,10 @@ package com.example.data.repository
 import com.example.data.api.TestHelpers
 import com.example.data.api.WeatherApi
 import com.example.data.api.response.weather.CurrentWeatherResponse
+import com.example.data.api.response.weather.FiveDayForecastResponse
 import com.example.data.domain.City
 import com.example.data.domain.mapToCurrentWeather
+import com.example.data.domain.mapToForecast
 import com.example.data.search.WeatherResult
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -24,6 +26,8 @@ class WeatherSearchRepositoryShould {
 
     @MockK
     private lateinit var currentWeatherDeferred: Deferred<CurrentWeatherResponse>
+    @MockK
+    private lateinit var forecastDeferred: Deferred<FiveDayForecastResponse>
 
     private val someCity: City = City("Chicago", 41.8755616, -87.6244212)
 
@@ -46,9 +50,27 @@ class WeatherSearchRepositoryShould {
         val weather = repository.getCurrentWeather(someCity)
 
         // The repository returns a current weather result
-        assertEquals(weather, WeatherResult.Success(expectedWeather))
+        assertEquals(weather, WeatherResult.WeatherSuccess(expectedWeather))
+    }
+
+    @Test
+    fun `return forecast for a city when search succeeds`() = runBlocking {
+        val expectedResponse = getForecastResponse()
+        val expectedForecast = expectedResponse.mapToForecast()
+
+        coEvery { weatherApi.getForecast(someCity) }.coAnswers { forecastDeferred }
+        coEvery { forecastDeferred.await() }.coAnswers { expectedResponse }
+
+        // When search is called with a city
+        val forecast = repository.getForecast(someCity)
+
+        // The repository returns he forecast
+        assertEquals(forecast, WeatherResult.ForecastSuccess(expectedForecast))
     }
 
     private fun getWeatherResponse(): CurrentWeatherResponse =
         TestHelpers.getWeatherResponse(CurrentWeatherResponse::class.java, "weather.json")
+
+    private fun getForecastResponse(): FiveDayForecastResponse =
+        TestHelpers.getWeatherResponse(FiveDayForecastResponse::class.java, "forecast.json")
 }
