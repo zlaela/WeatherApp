@@ -7,6 +7,8 @@ import com.example.data.api.response.weather.FiveDayForecastResponse
 import com.example.data.domain.City
 import com.example.data.domain.mapToCurrentWeather
 import com.example.data.domain.mapToForecast
+import com.example.data.exception.HttpException
+import com.example.data.search.SearchState
 import com.example.data.search.WeatherResult
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -26,6 +28,7 @@ class WeatherSearchRepositoryShould {
 
     @MockK
     private lateinit var currentWeatherDeferred: Deferred<CurrentWeatherResponse>
+
     @MockK
     private lateinit var forecastDeferred: Deferred<FiveDayForecastResponse>
 
@@ -66,6 +69,17 @@ class WeatherSearchRepositoryShould {
 
         // The repository returns he forecast
         assertEquals(forecast, WeatherResult.ForecastSuccess(expectedForecast))
+    }
+
+    @Test
+    fun `return failure when API exception occurs`() = runBlocking {
+        coEvery { weatherApi.getForecast(someCity) }.throws(HttpException())
+
+        // when the search is performed for some city
+        val result = repository.getForecast(someCity)
+
+        // The repository returns a failure
+        assertEquals(result, WeatherResult.Failure("Bad"))
     }
 
     private fun getWeatherResponse(): CurrentWeatherResponse =
