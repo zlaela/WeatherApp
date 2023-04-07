@@ -7,6 +7,7 @@ buildscript {
         junit_version = '5.8.2'
         mockito_jupiter_version = '3.5.11'
         mockk_version = '1.13.4'
+        mockwebserver_version = '4.10.0'
         moshi_version = '1.14.0'
         room_version = '2.5.1'
     }
