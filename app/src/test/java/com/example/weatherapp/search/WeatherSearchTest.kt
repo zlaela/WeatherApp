@@ -67,7 +67,7 @@ class WeatherSearchTest {
         // Verify that livedata emits loading state, weather result, and hide loading states in order
         verifySequence {
             weatherLiveDataObserver.onChanged(showLoading)
-            weatherLiveDataObserver.onChanged(WeatherResult.Success(expectedWeather))
+            weatherLiveDataObserver.onChanged(WeatherResult.WeatherSuccess(expectedWeather))
             weatherLiveDataObserver.onChanged(hideLoading)
         }
     }
