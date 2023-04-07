@@ -3,8 +3,10 @@ package com.example.weatherapp.search
 import androidx.lifecycle.Observer
 import com.example.data.api.WeatherApi
 import com.example.data.api.response.weather.CurrentWeatherResponse
+import com.example.data.api.response.weather.FiveDayForecastResponse
 import com.example.data.domain.City
 import com.example.data.domain.mapToCurrentWeather
+import com.example.data.domain.mapToForecast
 import com.example.data.repository.WeatherSearchRepository
 import com.example.data.search.WeatherResult
 import com.example.weatherapp.ExecutionExtension
@@ -33,6 +35,9 @@ class WeatherSearchTest {
 
     @MockK
     private lateinit var weatherDeferred: Deferred<CurrentWeatherResponse>
+
+    @MockK
+    private lateinit var forecastDeferred: Deferred<FiveDayForecastResponse>
 
     @MockK
     private lateinit var weatherLiveDataObserver: Observer<WeatherResult>
@@ -72,7 +77,35 @@ class WeatherSearchTest {
         }
     }
 
+    @Test
+    fun `performs forecast lookup for a given city`() = runBlocking {
+        val expectedResponse = getForecastResponse()
+        val expectedForecast = expectedResponse.mapToForecast()
+
+        // Ensure every change is emitted
+        every { weatherLiveDataObserver.onChanged(any()) }.answers { }
+        coEvery { weatherApi.getForecast(someCity) }.coAnswers { forecastDeferred }
+        coEvery { forecastDeferred.await() }.coAnswers { expectedResponse }
+
+        weatherSearchViewModel.weatherLiveData.observeForever(weatherLiveDataObserver)
+
+        // When the viewModel searches for a city
+        weatherSearchViewModel.getForecast(someCity)
+
+        // Verify that livedata emits loading state, weather result, and hide loading states in order
+        verifySequence {
+            weatherLiveDataObserver.onChanged(showLoading)
+            weatherLiveDataObserver.onChanged(WeatherResult.ForecastSuccess(expectedForecast))
+            weatherLiveDataObserver.onChanged(hideLoading)
+        }
+
+    }
+
     // TODO: This is duplicated and should  be moved to a common testing package
     private fun getWeatherResponse(): CurrentWeatherResponse =
         TestHelpers.getWeatherResponse(CurrentWeatherResponse::class.java, "weather.json")
+
+    // TODO: This is duplicated and should  be moved to a common testing package
+    private fun getForecastResponse(): FiveDayForecastResponse =
+        TestHelpers.getWeatherResponse(FiveDayForecastResponse::class.java, "forecast.json")
 }
