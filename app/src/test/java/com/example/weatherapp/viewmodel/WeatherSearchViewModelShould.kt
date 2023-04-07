@@ -2,15 +2,16 @@ package com.example.weatherapp.viewmodel
 
 import com.example.data.domain.City
 import com.example.data.repository.WeatherRepository
+import com.example.weatherapp.ExecutionExtension
 import com.example.weatherapp.TestCoroutineDispatchers
+import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(MockKExtension::class)
+@ExtendWith(ExecutionExtension::class, MockKExtension::class)
 class WeatherSearchViewModelShould {
     @RelaxedMockK
     private lateinit var weatherRepository: WeatherRepository
@@ -31,6 +32,6 @@ class WeatherSearchViewModelShould {
         weatherViewModel.getWeatherFor(someCity)
 
         // The repository performs a search for the given city
-        verify(exactly = 1) { weatherRepository.getCurrentWeather(someCity) }
+        coVerify (exactly = 1) { weatherRepository.getCurrentWeather(someCity) }
     }
 }
