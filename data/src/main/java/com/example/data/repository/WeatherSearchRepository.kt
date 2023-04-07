@@ -18,4 +18,8 @@ class WeatherSearchRepository(
             WeatherResult.Failure("Bad")
         }
     }
+
+    override suspend fun getForecast(someCity: City): WeatherResult {
+        TODO("Not yet implemented")
+    }
 }

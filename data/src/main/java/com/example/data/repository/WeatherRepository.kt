@@ -5,4 +5,5 @@ import com.example.data.search.WeatherResult
 
 interface WeatherRepository {
     suspend fun getCurrentWeather(someCity: City): WeatherResult
+    suspend fun getForecast(someCity: City): WeatherResult
 }
