@@ -10,5 +10,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class PartOfDay(
     @Json(name = "pod")
-    val partOfDay: String
+    val partOfDay: String?
 )

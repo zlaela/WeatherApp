@@ -20,23 +20,23 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Forecast3Hr(
     @Json(name = "dt")
-    val dt: Int,
+    val dt: Int?,
     @Json(name = "main")
-    val main: Main,
+    val main: Main?,
     @Json(name = "weather")
-    val weather: List<Weather>,
+    val weather: List<Weather>?,
     @Json(name = "clouds")
     val clouds: Clouds? = null,
     @Json(name = "wind")
     val wind: Wind? = null,
     @Json(name = "visibility")
-    val visibility: Int,
+    val visibility: Int?,
     @Json(name = "pop")
-    val probabilityOfPrecip: Double,
+    val probabilityOfPrecip: Double?,
     @Json(name = "sys")
-    val partOfDay: PartOfDay,
+    val partOfDay: PartOfDay?,
     @Json(name = "dt_txt")
-    val dtTxt: String,
+    val dtTxt: String?,
     @Json(name = "rain")
     val rain: Rain? = null,
     @Json(name = "snow")

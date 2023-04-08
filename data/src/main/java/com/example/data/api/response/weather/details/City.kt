@@ -19,19 +19,19 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class City(
     @Json(name = "id")
-    val id: Int,
+    val id: Int?,
     @Json(name = "name")
-    val name: String,
+    val name: String?,
     @Json(name = "coord")
-    val coord: Coord,
+    val coord: Coord?,
     @Json(name = "country")
-    val country: String,
+    val country: String?,
     @Json(name = "population")
-    val population: Int,
+    val population: Int?,
     @Json(name = "timezone")
-    val timezone: Int,
+    val timezone: Int?,
     @Json(name = "sunrise")
-    val sunrise: Int,
+    val sunrise: Int?,
     @Json(name = "sunset")
-    val sunset: Int
+    val sunset: Int?
 )

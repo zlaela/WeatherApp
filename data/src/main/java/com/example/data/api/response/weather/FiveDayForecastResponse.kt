@@ -15,13 +15,13 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class FiveDayForecastResponse(
     @Json(name = "cod")
-    val code: String,
+    val code: String?,
     @Json(name = "message")
-    val message: Int,
+    val message: Int?,
     @Json(name = "cnt")
-    val num_timestamps: Int,
+    val num_timestamps: Int?,
     @Json(name = "list")
-    val forecasts: List<Forecast3Hr>,
+    val forecasts: List<Forecast3Hr>?,
     @Json(name = "city")
-    val city: City
+    val city: City?
 )

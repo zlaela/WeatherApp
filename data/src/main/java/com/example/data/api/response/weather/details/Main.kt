@@ -17,21 +17,21 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Main(
     @Json(name = "temp")
-    val temp: Double,
+    val temp: Double?,
     @Json(name = "feels_like")
-    val feelsLike: Double,
+    val feelsLike: Double?,
     @Json(name = "temp_min")
-    val tempMin: Double,
+    val tempMin: Double?,
     @Json(name = "temp_max")
-    val tempMax: Double,
+    val tempMax: Double?,
     @Json(name = "pressure")
-    val pressure: Int,
+    val pressure: Int?,
     @Json(name = "sea_level")
     val pressureSeaLevel: Int? = null,
     @Json(name = "grnd_level")
     val pressureGroundLevel: Int? = null,
     @Json(name = "humidity")
-    val humidity: Int,
+    val humidity: Int?,
     @Json(name = "temp_kf")
     val tempKf: Double? = null
 )

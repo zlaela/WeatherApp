@@ -10,5 +10,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Snow(
     @Json(name = "3h")
-    val snowLast3Hrs: Double
+    val snowLast3Hrs: Double?
 )

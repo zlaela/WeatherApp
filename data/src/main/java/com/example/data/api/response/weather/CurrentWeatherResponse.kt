@@ -23,29 +23,29 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class CurrentWeatherResponse(
     @Json(name = "coord")
-    val coord: Coord,
+    val coord: Coord?,
     @Json(name = "weather")
-    val weather: List<Weather>,
+    val weather: List<Weather>?,
     @Json(name = "base")
-    val base: String,
+    val base: String?,
     @Json(name = "main")
-    val main: Main,
+    val main: Main?,
     @Json(name = "visibility")
-    val visibility: Int,
+    val visibility: Int?,
     @Json(name = "wind")
-    val wind: Wind,
+    val wind: Wind?,
     @Json(name = "clouds")
-    val clouds: Clouds,
+    val clouds: Clouds?,
     @Json(name = "dt")
-    val dt: Int,
+    val dt: Int?,
     @Json(name = "sys")
-    val sys: Sys,
+    val sys: Sys?,
     @Json(name = "timezone")
-    val timezone: Int,
+    val timezone: Int?,
     @Json(name = "id")
-    val id: Int,
+    val id: Int?,
     @Json(name = "name")
-    val name: String,
+    val name: String?,
     @Json(name = "cod")
-    val code: Int
+    val code: Int?
 )

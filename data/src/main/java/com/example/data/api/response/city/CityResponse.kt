@@ -8,7 +8,7 @@ class Cities : ArrayList<CityItem>()
 @JsonClass(generateAdapter = true)
 data class CityItem(
     @Json(name = "name")
-    val name: String,
+    val name: String?,
     @Json(name = "lat")
     val lat: Double?,
     @Json(name = "lon")
