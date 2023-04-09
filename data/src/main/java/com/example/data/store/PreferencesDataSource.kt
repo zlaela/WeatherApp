@@ -1,8 +1,11 @@
-package com.example.weatherapp.store
+package com.example.data.store
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import com.example.data.domain.City
+import com.example.data.exception.DataStoreException
+import com.example.data.exception.DataStoreReadException
+import com.example.data.exception.DataStoreUpdateException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
@@ -18,7 +21,7 @@ class PreferencesDataSource(
             if (exception is IOException) {
                 emit(emptyPreferences())
             } else {
-                throw exception
+                throw DataStoreException()
             }
         }.map { prefs ->
             mapPreferences(prefs)
@@ -30,35 +33,36 @@ class PreferencesDataSource(
                 prefs[PreferenceKeys.COUNTRY] = country
             }
         } catch (e: IOException) {
-            // TODO: change to prefs update exception
+            throw DataStoreUpdateException()
         }
 
     suspend fun updateCity(city: City) =
-        dataStore.edit { prefs ->
-            prefs[PreferenceKeys.CITY_NAME] = city.name
-            prefs[PreferenceKeys.CITY_LAT] = city.lat
-            prefs[PreferenceKeys.CITY_LON] = city.lon
-            prefs[PreferenceKeys.CITY_ID] = city.id ?: -1
+        try {
+            dataStore.edit { prefs ->
+                prefs[PreferenceKeys.CITY_NAME] = city.name
+                prefs[PreferenceKeys.CITY_LAT] = city.lat
+                prefs[PreferenceKeys.CITY_LON] = city.lon
+                prefs[PreferenceKeys.CITY_ID] = city.id ?: -1
+            }
+        } catch (e: IOException) {
+            throw DataStoreUpdateException()
         }
 
     suspend fun getPreferences() =
         try {
             mapPreferences(dataStore.data.first().toPreferences())
         } catch (e: IOException) {
-            // TODO: change to prefs update exception
+            throw DataStoreReadException()
         }
 
     private fun mapPreferences(preferences: Preferences): UserPreferences {
-        val country = preferences[PreferenceKeys.COUNTRY] ?: ""
-        val cityId = preferences[PreferenceKeys.CITY_ID] ?: -1
-        val cityLat = preferences[PreferenceKeys.CITY_LAT] ?: 0.0
-        val cityLon = preferences[PreferenceKeys.CITY_LON] ?: 0.0
-        val cityName = preferences[PreferenceKeys.CITY_NAME] ?: ""
+        val country = preferences[PreferenceKeys.COUNTRY]
+        val cityId = preferences[PreferenceKeys.CITY_ID]
+        val cityLat = preferences[PreferenceKeys.CITY_LAT]
+        val cityLon = preferences[PreferenceKeys.CITY_LON]
+        val cityName = preferences[PreferenceKeys.CITY_NAME]
 
-        return UserPreferences(
-            City(cityName, cityLat, cityLon, cityId),
-            country
-        )
+        return UserPreferences(country, cityName, cityLat, cityLon, cityId)
     }
 
     private object PreferenceKeys {
