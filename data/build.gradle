@@ -45,6 +45,9 @@ android {
 dependencies {
     implementation fileTree(dir:"libs", include:["*.jar"])
 
+    // DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
     // coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
