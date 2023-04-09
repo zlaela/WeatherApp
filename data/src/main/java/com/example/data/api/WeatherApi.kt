@@ -2,10 +2,19 @@ package com.example.data.api
 
 import com.example.data.api.response.weather.CurrentWeatherResponse
 import com.example.data.api.response.weather.FiveDayForecastResponse
-import com.example.data.domain.City
 import kotlinx.coroutines.Deferred
+import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface WeatherApi {
-    suspend fun getCurrentWeather(city: City): Deferred<CurrentWeatherResponse>
-    suspend fun getForecast(city: City): Deferred<FiveDayForecastResponse>
+    @GET("data/2.5/weather")
+    fun getCurrentWeather(
+        @Query("q") city: String,
+    ): Deferred<CurrentWeatherResponse>
+
+    @GET("data/2.5/forecast")
+    fun getForecast(
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double,
+    ): Deferred<FiveDayForecastResponse>
 }
