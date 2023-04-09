@@ -61,7 +61,7 @@ class WeatherSearchTest {
 
         // Ensure every change is emitted
         every { weatherLiveDataObserver.onChanged(any()) }.answers { }
-        coEvery { weatherApi.getCurrentWeather(someCity) }.returns(weatherDeferred)
+        coEvery { weatherApi.getCurrentWeather(someCity.name) }.returns(weatherDeferred)
         coEvery { weatherDeferred.await() }.coAnswers { expectedResponse }
 
         weatherSearchViewModel.weatherLiveData.observeForever(weatherLiveDataObserver)
@@ -84,7 +84,7 @@ class WeatherSearchTest {
 
         // Ensure every change is emitted
         every { weatherLiveDataObserver.onChanged(any()) }.answers { }
-        coEvery { weatherApi.getForecast(someCity) }.coAnswers { forecastDeferred }
+        coEvery { weatherApi.getForecast(someCity.lat, someCity.lon) }.coAnswers { forecastDeferred }
         coEvery { forecastDeferred.await() }.coAnswers { expectedResponse }
 
         weatherSearchViewModel.weatherLiveData.observeForever(weatherLiveDataObserver)

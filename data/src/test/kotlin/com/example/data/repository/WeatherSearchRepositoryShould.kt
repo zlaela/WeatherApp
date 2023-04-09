@@ -8,7 +8,6 @@ import com.example.data.domain.City
 import com.example.data.domain.mapToCurrentWeather
 import com.example.data.domain.mapToForecast
 import com.example.data.exception.HttpException
-import com.example.data.search.SearchState
 import com.example.data.search.WeatherResult
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -46,7 +45,7 @@ class WeatherSearchRepositoryShould {
         val expectedResponse = getWeatherResponse()
         val expectedWeather = expectedResponse.mapToCurrentWeather()
 
-        coEvery { weatherApi.getCurrentWeather(someCity) }.coAnswers { currentWeatherDeferred }
+        coEvery { weatherApi.getCurrentWeather(someCity.name) }.coAnswers { currentWeatherDeferred }
         coEvery { currentWeatherDeferred.await() }.coAnswers { expectedResponse }
 
         // When search is called with a city
@@ -61,7 +60,7 @@ class WeatherSearchRepositoryShould {
         val expectedResponse = getForecastResponse()
         val expectedForecast = expectedResponse.mapToForecast()
 
-        coEvery { weatherApi.getForecast(someCity) }.coAnswers { forecastDeferred }
+        coEvery { weatherApi.getForecast(someCity.lat, someCity.lon) }.coAnswers { forecastDeferred }
         coEvery { forecastDeferred.await() }.coAnswers { expectedResponse }
 
         // When search is called with a city
@@ -73,7 +72,7 @@ class WeatherSearchRepositoryShould {
 
     @Test
     fun `return failure when API exception occurs`() = runBlocking {
-        coEvery { weatherApi.getForecast(someCity) }.throws(HttpException())
+        coEvery { weatherApi.getForecast(someCity.lat, someCity.lon) }.throws(HttpException())
 
         // when the search is performed for some city
         val result = repository.getForecast(someCity)
