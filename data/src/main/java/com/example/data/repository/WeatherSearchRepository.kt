@@ -13,7 +13,7 @@ class WeatherSearchRepository(
 
     override suspend fun getCurrentWeather(someCity: City): WeatherResult {
         return try {
-            val resultAsync = weatherApi.getCurrentWeather(someCity).await()
+            val resultAsync = weatherApi.getCurrentWeather(someCity.name).await()
             WeatherResult.WeatherSuccess(resultAsync.mapToCurrentWeather())
         } catch (ex: HttpException) {
             WeatherResult.Failure("Bad")
@@ -22,7 +22,7 @@ class WeatherSearchRepository(
 
     override suspend fun getForecast(someCity: City): WeatherResult {
         return try {
-            val resultAsync = weatherApi.getForecast(someCity).await()
+            val resultAsync = weatherApi.getForecast(someCity.lat, someCity.lon).await()
             val forecasts = resultAsync.mapToForecast()
             WeatherResult.ForecastSuccess(forecasts)
         } catch (ex: HttpException) {
