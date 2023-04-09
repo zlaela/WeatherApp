@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import androidx.core.content.ContextCompat.startActivity
+import com.example.weatherapp.R
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import kotlin.properties.Delegates
@@ -27,7 +28,7 @@ object LocationHelper {
     private var alertDialog: AlertDialog? = null
 
     fun Activity.checkCanUseLocation(
-        callback: LocationRequestCallback
+        callback: LocationRequestCallback,
     ) {
         locationCallback = callback
         locationRequest = createLocationRequest()
@@ -61,7 +62,7 @@ object LocationHelper {
     }
 
     fun Activity.tryGetLastLocation(
-        locationClient: FusedLocationProviderClient
+        locationClient: FusedLocationProviderClient,
     ) {
         // If location permission granted
         if (checkSelfPermission(coarseLocation) == PackageManager.PERMISSION_GRANTED) {
@@ -84,30 +85,26 @@ object LocationHelper {
         }
     }
 
-    /**
-     * TODO: Gross. Extract string resources
-     **/
     fun Activity.showGoToLocationPermissionsSettingsDialog() {
         makeDialog(
             this,
-            "Open Settings",
+            getString(R.string.open_settings),
             { takeToLocationSetting() },
-            "Refuse",
+            getString(R.string.refuse),
             null,
-            "Location Permission Denied",
-            "To get local weather information, allow this app access to your device's location. " +
-                    "Otherwise, you must set the location manually in the search field."
+            getString(R.string.location_permission_denied),
+            getString(R.string.location_rationale)
         )
     }
 
     private fun Activity.showGoToTurnOnLocationDialog(positiveButtonAction: () -> Unit) {
         makeDialog(
             this,
-            positiveButtonText = "Turn On",
+            positiveButtonText = getString(R.string.turn_on),
             positiveButtonAction = positiveButtonAction,
-            negativeButtonText = "Cancel",
-            title = "Location not available",
-            description = "Please turn on your device's location to get local weather information"
+            negativeButtonText = getString(R.string.cancel),
+            title = getString(R.string.location_not_available),
+            description = getString(R.string.please_turn_on_location)
         )
     }
 
@@ -126,7 +123,7 @@ object LocationHelper {
         negativeButtonText: String = "",
         negativeButtonAction: (() -> Unit)? = null,
         title: String,
-        description: String
+        description: String,
     ) {
 
         alertDialog?.dismiss()
