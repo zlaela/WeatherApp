@@ -8,8 +8,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import com.example.data.domain.City
-import com.example.weatherapp.store.PreferencesDataSource
-import com.example.weatherapp.store.UserPreferences
+import com.example.data.store.PreferencesDataSource
+import com.example.data.store.UserPreferences
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.*
@@ -33,7 +33,7 @@ class PreferencesDataSourceShould {
 
     @Test
     fun loadEmptyPrefs() {
-        val expectedPrefs = UserPreferences(City("", 0.0, 0.0, -1), "")
+        val expectedPrefs = UserPreferences()
 
         // The repository returns empty preferences when nothing has been set
         testScope.runTest {
@@ -46,11 +46,12 @@ class PreferencesDataSourceShould {
     @Test
     fun updateCity() {
         val city = City("Chicago", 41.8755616, -87.6244212, 4896348)
+        val prefs = UserPreferences(null,"Chicago", 41.8755616, -87.6244212, 4896348)
 
         testScope.runTest {
             preferencesDataSource.updateCity(city)
-            val prefsCity = preferencesDataSource.preferencesFlow.first().city
-            assertEquals(city, prefsCity)
+            val prefsCity: UserPreferences = preferencesDataSource.preferencesFlow.first()
+            assertEquals(prefs, prefsCity)
             testDataStore.edit { it.clear() }
         }
     }
