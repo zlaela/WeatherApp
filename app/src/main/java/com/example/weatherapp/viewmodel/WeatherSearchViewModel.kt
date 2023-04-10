@@ -2,16 +2,23 @@ package com.example.weatherapp.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.data.domain.City
+import com.example.data.repository.DataStoreRepository
 import com.example.data.repository.WeatherRepository
 import com.example.data.search.WeatherResult
 import kotlinx.coroutines.launch
 
 class WeatherSearchViewModel(
     private val dispatchers: CoroutineDispatchers,
-    private val weatherRepository: WeatherRepository
+    private val weatherRepository: WeatherRepository,
+    private val dataStoreRepository: DataStoreRepository
 ) : CoroutineViewModel(dispatchers) {
+
+    val getPrefsOnStart = liveData {
+        emit(dataStoreRepository.getPreferences())
+    }
 
     private val _weatherLiveData = MutableLiveData<WeatherResult>()
     val weatherLiveData: LiveData<WeatherResult> = _weatherLiveData

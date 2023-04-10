@@ -1,6 +1,7 @@
 package com.example.weatherapp.viewmodel
 
 import com.example.data.domain.City
+import com.example.data.repository.DataStoreRepository
 import com.example.data.repository.WeatherRepository
 import com.example.weatherapp.ExecutionExtension
 import com.example.weatherapp.TestCoroutineDispatchers
@@ -16,6 +17,9 @@ class WeatherSearchViewModelShould {
     @RelaxedMockK
     private lateinit var weatherRepository: WeatherRepository
 
+    @RelaxedMockK
+    private lateinit var dataStoreRepository: DataStoreRepository
+
     private lateinit var weatherViewModel: WeatherSearchViewModel
 
     private val someCity: City = City("Chicago", 41.8755616, -87.6244212)
@@ -23,7 +27,8 @@ class WeatherSearchViewModelShould {
     @BeforeEach
     fun setUp() {
         val dispatchers = TestCoroutineDispatchers()
-        weatherViewModel = WeatherSearchViewModel(dispatchers, weatherRepository)
+        weatherViewModel =
+            WeatherSearchViewModel(dispatchers, weatherRepository, dataStoreRepository)
     }
 
     @Test
@@ -32,7 +37,7 @@ class WeatherSearchViewModelShould {
         weatherViewModel.getWeatherFor(someCity)
 
         // The repository performs a search for the given city
-        coVerify (exactly = 1) { weatherRepository.getCurrentWeather(someCity) }
+        coVerify(exactly = 1) { weatherRepository.getCurrentWeather(someCity) }
     }
 
     @Test
@@ -41,6 +46,6 @@ class WeatherSearchViewModelShould {
         weatherViewModel.getForecast(someCity)
 
         // The repository performs a search for the given city
-        coVerify (exactly = 1) { weatherRepository.getForecast(someCity) }
+        coVerify(exactly = 1) { weatherRepository.getForecast(someCity) }
     }
 }
