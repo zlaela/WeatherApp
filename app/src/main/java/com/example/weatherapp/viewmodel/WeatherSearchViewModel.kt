@@ -6,14 +6,17 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.data.domain.City
 import com.example.data.repository.DataStoreRepository
-import com.example.data.repository.WeatherRepository
+import com.example.data.repository.WeatherSearchRepository
 import com.example.data.search.WeatherResult
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class WeatherSearchViewModel(
+@HiltViewModel
+class WeatherSearchViewModel @Inject constructor(
     private val dispatchers: CoroutineDispatchers,
-    private val weatherRepository: WeatherRepository,
-    private val dataStoreRepository: DataStoreRepository
+    private val weatherRepository: WeatherSearchRepository,
+    private val dataStoreRepository: DataStoreRepository,
 ) : CoroutineViewModel(dispatchers) {
 
     val getPrefsOnStart = liveData {
