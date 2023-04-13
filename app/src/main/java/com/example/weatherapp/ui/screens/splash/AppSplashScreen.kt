@@ -15,7 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,7 +42,10 @@ fun AppSplashScreen(navController: NavController) {
         Column(modifier = Modifier
             .fillMaxSize()
             .background(colors.primary)
-            .scale(scale.value),
+            .graphicsLayer {
+                this.scaleX = scale.value
+                this.scaleY = scale.value
+            },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
             Image(
