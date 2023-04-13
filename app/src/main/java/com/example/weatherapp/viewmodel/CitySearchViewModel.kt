@@ -7,12 +7,15 @@ import com.example.data.repository.SearchRepository
 import com.example.data.search.SearchState
 import com.example.weatherapp.validation.StringValidator
 import com.example.weatherapp.validation.ValidationResult
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CitySearchViewModel(
+@HiltViewModel
+class CitySearchViewModel @Inject constructor(
     private val dispatchers: CoroutineDispatchers,
     private val repository: SearchRepository,
-    private val validator: StringValidator
+    private val validator: StringValidator,
 ) : CoroutineViewModel(dispatchers) {
     private val _liveData = MutableLiveData<SearchState>()
     val searchLiveData: LiveData<SearchState> = _liveData
