@@ -3,6 +3,8 @@ package com.example.data.repository
 import com.example.data.api.GeoApi
 import com.example.data.api.response.city.Cities
 import com.example.data.api.response.city.CityItem
+import com.example.data.domain.mapToCitiesList
+import com.example.data.domain.mapToCity
 import com.example.data.exception.HttpException
 import com.example.data.search.SearchState
 import io.mockk.coEvery
@@ -49,7 +51,7 @@ class SearchRepositoryShould {
         val expectedResult = repository.searchCity(someCity)
 
         // The repository returns matching cities
-        assertEquals(expectedResult, SearchState.CitiesResult(cities))
+        assertEquals(expectedResult, SearchState.CitiesResult(cities.mapToCitiesList()))
     }
 
     @Test
@@ -64,7 +66,7 @@ class SearchRepositoryShould {
         val expectedResult = repository.searchZip(someZip)
 
         // The repository returns matching cities
-        assertEquals(expectedResult, SearchState.ZipResult(city1))
+        assertEquals(expectedResult, SearchState.ZipResult(city1.mapToCity()))
     }
 
     @Test

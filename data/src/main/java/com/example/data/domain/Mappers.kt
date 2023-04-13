@@ -1,7 +1,22 @@
 package com.example.data.domain
 
+import com.example.data.api.response.city.Cities
+import com.example.data.api.response.city.CityItem
 import com.example.data.api.response.weather.CurrentWeatherResponse
 import com.example.data.api.response.weather.FiveDayForecastResponse
+
+fun Cities.mapToCitiesList() =
+    this.map {
+        it.mapToCity()
+    }
+
+fun CityItem.mapToCity(): City {
+    this.let {
+        listOfNotNull(it.name, it.lat, it.lon).apply {
+            return City(this[0] as String, this[1] as Double, this[2] as Double)
+        }
+    }
+}
 
 fun CurrentWeatherResponse.mapToCurrentWeather(): CurrentWeather =
     CurrentWeather(

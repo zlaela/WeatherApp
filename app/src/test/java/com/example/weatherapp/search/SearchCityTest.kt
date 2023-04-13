@@ -3,6 +3,7 @@ package com.example.weatherapp.search
 import com.example.data.api.GeoApi
 import com.example.data.api.response.city.Cities
 import com.example.data.api.response.city.CityItem
+import com.example.data.domain.mapToCitiesList
 import com.example.data.repository.SearchRepository
 import com.example.data.search.SearchState
 import com.example.weatherapp.ExecutionExtension
@@ -61,7 +62,7 @@ class SearchCityTest {
     fun `performs search for a given input`() = runBlocking {
         val userInput = "someCity"
         cities.addAll(listOf(city1, city2))
-        val results = SearchState.CitiesResult(cities)
+        val results = SearchState.CitiesResult(cities.mapToCitiesList())
 
         // Simulate API call
         coEvery { geoApi.searchCityAsync(userInput) }.returns(locationDeferred)

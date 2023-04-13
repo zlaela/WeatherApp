@@ -2,7 +2,7 @@ package com.example.weatherapp.viewmodel
 
 import com.example.data.domain.City
 import com.example.data.repository.DataStoreRepository
-import com.example.data.repository.WeatherRepository
+import com.example.data.repository.WeatherSearchRepository
 import com.example.weatherapp.ExecutionExtension
 import com.example.weatherapp.TestCoroutineDispatchers
 import io.mockk.coVerify
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(ExecutionExtension::class, MockKExtension::class)
 class WeatherSearchViewModelShould {
     @RelaxedMockK
-    private lateinit var weatherRepository: WeatherRepository
+    private lateinit var weatherRepository: WeatherSearchRepository
 
     @RelaxedMockK
     private lateinit var dataStoreRepository: DataStoreRepository
