@@ -7,7 +7,8 @@ class StringValidator {
     private val zipPattern = Pattern.compile(ZIP_REGEX)
 
     fun validate(someCity: String): ValidationResult =
-        if (someCity.trim().isBlank()) {
+        // TODO: something better than "unkown city"
+        if (someCity.trim().isBlank() || someCity == "Unknown City") {
             ValidationResult.Invalid
         } else {
             if (cityPattern.matcher(someCity).matches()) {
