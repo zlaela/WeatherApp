@@ -39,8 +39,8 @@ class SearchCityTest {
 
     private val city1 = CityItem("Chicago", 41.8755616, -87.6244212, "Illinois", "US")
     private val city2 = CityItem("Chicago", -33.71745, 18.9963167, "Western Cape", "ZA")
-    private val showLoading = SearchState.ShowLoading
-    private val hideLoading = SearchState.HideLoading
+    private val showLoading = SearchState.Loading(true)
+    private val hideLoading = SearchState.Loading(false)
     private val cities = mutableListOf<CityItem>()
 
     @BeforeEach

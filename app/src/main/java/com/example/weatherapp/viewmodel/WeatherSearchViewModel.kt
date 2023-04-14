@@ -39,13 +39,13 @@ class WeatherSearchViewModel @Inject constructor(
     }
 
     private fun asyncSearch(doAsync: suspend () -> WeatherResult) {
-        _weatherLiveData.value = WeatherResult.ShowLoading
+        _weatherLiveData.value = WeatherResult.Loading(true)
         launch(dispatchers.background) {
             // on background thread
             val result = doAsync()
             // on ui thread
             launch(dispatchers.ui) {
-                _weatherLiveData.value = WeatherResult.HideLoading
+                _weatherLiveData.value = WeatherResult.Loading(false)
                 _weatherLiveData.value = result
             }
         }

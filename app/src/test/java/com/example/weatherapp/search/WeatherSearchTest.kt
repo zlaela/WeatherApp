@@ -53,8 +53,8 @@ class WeatherSearchTest {
     private lateinit var weatherLiveDataObserver: Observer<WeatherResult>
 
     private val someCity: City = City("", "", "Chicago", 41.8755616, -87.6244212)
-    private val showLoading: WeatherResult = WeatherResult.ShowLoading
-    private val hideLoading: WeatherResult = WeatherResult.HideLoading
+    private val showLoading: WeatherResult = WeatherResult.Loading(true)
+    private val hideLoading: WeatherResult = WeatherResult.Loading(false)
     private lateinit var weatherSearchViewModel: WeatherSearchViewModel
 
     private lateinit var uiController: WeatherSearchUiController
@@ -149,8 +149,7 @@ class WeatherSearchTest {
         // Ensure every change is emitted
         every { weatherLiveDataObserver.onChanged(any()) }.answers { }
         coEvery {
-            weatherApi.getForecast(someCity.lat,
-                someCity.lon)
+            weatherApi.getForecast(someCity.lat, someCity.lon)
         }.coAnswers { forecastDeferred }
         coEvery { forecastDeferred.await() }.coAnswers { expectedForecastResponse }
 
@@ -158,6 +157,7 @@ class WeatherSearchTest {
 
         return expectedForecastResponse.mapToForecast()
     }
+
     private fun setUpWeatherResults(): CurrentWeather {
         val expectedResponse = getWeatherResponse()
 

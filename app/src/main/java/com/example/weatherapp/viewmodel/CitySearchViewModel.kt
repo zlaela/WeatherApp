@@ -31,13 +31,13 @@ class CitySearchViewModel @Inject constructor(
     }
 
     private fun asyncSearch(doAsync: suspend () -> SearchState) {
-        _liveData.value = SearchState.ShowLoading
+        _liveData.value = SearchState.Loading(true)
         launch(dispatchers.background) {
             // on background thread
             val result = doAsync()
             // on ui thread
             launch(dispatchers.ui) {
-                _liveData.value = SearchState.HideLoading
+                _liveData.value = SearchState.Loading(false)
                 _liveData.value = result
             }
         }
