@@ -3,8 +3,6 @@ package com.example.data.api.response.city
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-class Cities : ArrayList<CityItem>()
-
 @JsonClass(generateAdapter = true)
 data class CityItem(
     @Json(name = "name")

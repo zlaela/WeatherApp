@@ -1,7 +1,6 @@
 package com.example.data.repository
 
 import com.example.data.api.GeoApi
-import com.example.data.api.response.city.Cities
 import com.example.data.api.response.city.CityItem
 import com.example.data.domain.mapToCitiesList
 import com.example.data.domain.mapToCity
@@ -23,13 +22,14 @@ class SearchRepositoryShould {
     @RelaxedMockK
     private lateinit var geoApi: GeoApi
     @MockK
-    private lateinit var citiesDeferred: Deferred<Cities>
+    private lateinit var citiesDeferred: Deferred<List<CityItem>>
+
     @MockK
     private lateinit var cityDeferred: Deferred<CityItem>
 
     private lateinit var repository: SearchRepository
 
-    private val cities: Cities = Cities()
+    private val cities = mutableListOf<CityItem>()
     private val city1 = CityItem("Chicago", 41.8755616, -87.6244212, "Illinois", "US")
     private val city2 = CityItem("Chicago", -33.71745, 18.9963167, "Western Cape", "ZA")
 

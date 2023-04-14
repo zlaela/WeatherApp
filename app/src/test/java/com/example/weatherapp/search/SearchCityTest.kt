@@ -1,7 +1,6 @@
 package com.example.weatherapp.search
 
 import com.example.data.api.GeoApi
-import com.example.data.api.response.city.Cities
 import com.example.data.api.response.city.CityItem
 import com.example.data.domain.mapToCitiesList
 import com.example.data.repository.SearchRepository
@@ -34,7 +33,7 @@ class SearchCityTest {
     private lateinit var geoApi: GeoApi
 
     @MockK
-    private lateinit var locationDeferred: Deferred<Cities>
+    private lateinit var locationDeferred: Deferred<List<CityItem>>
 
     private lateinit var uiController: CitySearchUiController
 
@@ -42,7 +41,7 @@ class SearchCityTest {
     private val city2 = CityItem("Chicago", -33.71745, 18.9963167, "Western Cape", "ZA")
     private val showLoading = SearchState.ShowLoading
     private val hideLoading = SearchState.HideLoading
-    private val cities: Cities = Cities()
+    private val cities = mutableListOf<CityItem>()
 
     @BeforeEach
     fun setUp() {
