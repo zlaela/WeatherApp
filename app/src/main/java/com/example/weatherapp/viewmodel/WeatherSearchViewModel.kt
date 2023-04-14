@@ -45,8 +45,8 @@ class WeatherSearchViewModel @Inject constructor(
             val result = doAsync()
             // on ui thread
             launch(dispatchers.ui) {
-                _weatherLiveData.value = result
                 _weatherLiveData.value = WeatherResult.HideLoading
+                _weatherLiveData.value = result
             }
         }
     }

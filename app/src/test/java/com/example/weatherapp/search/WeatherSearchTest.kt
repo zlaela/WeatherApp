@@ -108,8 +108,8 @@ class WeatherSearchTest {
         // And the viewmodel updates the weather for the city
         verifySequence {
             weatherLiveDataObserver.onChanged(showLoading)
-            weatherLiveDataObserver.onChanged(WeatherResult.WeatherSuccess(expectedWeather))
             weatherLiveDataObserver.onChanged(hideLoading)
+            weatherLiveDataObserver.onChanged(WeatherResult.WeatherSuccess(expectedWeather))
         }
     }
 
@@ -123,8 +123,8 @@ class WeatherSearchTest {
         // Verify that livedata emits loading state, weather result, and hide loading states in order
         verifySequence {
             weatherLiveDataObserver.onChanged(showLoading)
-            weatherLiveDataObserver.onChanged(WeatherResult.ForecastSuccess(expectedForecast))
             weatherLiveDataObserver.onChanged(hideLoading)
+            weatherLiveDataObserver.onChanged(WeatherResult.ForecastSuccess(expectedForecast))
         }
     }
 
@@ -138,8 +138,8 @@ class WeatherSearchTest {
         // Verify that livedata emits loading state, weather result, and hide loading states in order
         verifySequence {
             weatherLiveDataObserver.onChanged(showLoading)
-            weatherLiveDataObserver.onChanged(WeatherResult.WeatherSuccess(expectedWeather))
             weatherLiveDataObserver.onChanged(hideLoading)
+            weatherLiveDataObserver.onChanged(WeatherResult.WeatherSuccess(expectedWeather))
         }
     }
 

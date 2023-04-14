@@ -37,8 +37,8 @@ class CitySearchViewModel @Inject constructor(
             val result = doAsync()
             // on ui thread
             launch(dispatchers.ui) {
-                _liveData.value = result
                 _liveData.value = SearchState.HideLoading
+                _liveData.value = result
             }
         }
     }

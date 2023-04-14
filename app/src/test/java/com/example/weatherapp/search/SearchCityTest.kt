@@ -71,7 +71,7 @@ class SearchCityTest {
         uiController.search(userInput)
 
         // Verify that the UI state is as expected
-        val expectedUiStates = listOf(showLoading, results, hideLoading)
+        val expectedUiStates = listOf(showLoading, hideLoading, results)
         assertEquals(expectedUiStates, uiController.uiStates)
     }
 
