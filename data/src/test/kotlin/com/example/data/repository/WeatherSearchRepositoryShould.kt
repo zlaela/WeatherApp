@@ -31,7 +31,7 @@ class WeatherSearchRepositoryShould {
     @MockK
     private lateinit var forecastDeferred: Deferred<FiveDayForecastResponse>
 
-    private val someCity: City = City("Chicago", 41.8755616, -87.6244212)
+    private val someCity: City = City("US", "IL","Chicago", 41.8755616, -87.6244212, 4896348)
 
     private lateinit var repository: WeatherSearchRepository
 

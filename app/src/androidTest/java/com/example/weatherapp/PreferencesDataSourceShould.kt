@@ -45,7 +45,7 @@ class PreferencesDataSourceShould {
 
     @Test
     fun updateCity() {
-        val city = City("Chicago", 41.8755616, -87.6244212, 4896348)
+        val city = City("US","IL", "Chicago", 41.8755616, -87.6244212, 4896348)
         val prefs = UserPreferences(null,"Chicago", 41.8755616, -87.6244212, 4896348)
 
         testScope.runTest {

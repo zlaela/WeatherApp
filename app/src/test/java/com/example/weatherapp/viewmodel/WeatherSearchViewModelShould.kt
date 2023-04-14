@@ -22,7 +22,7 @@ class WeatherSearchViewModelShould {
 
     private lateinit var weatherViewModel: WeatherSearchViewModel
 
-    private val someCity: City = City("Chicago", 41.8755616, -87.6244212)
+    private val someCity: City = City("US", "IL", "Chicago", 41.8755616, -87.6244212)
 
     @BeforeEach
     fun setUp() {

@@ -2,8 +2,8 @@ package com.example.data.repository
 
 import com.example.data.domain.City
 import com.example.data.exception.DataStoreUpdateException
-import com.example.data.store.PreferencesDataSource
 import com.example.data.store.DataStoreState
+import com.example.data.store.PreferencesDataSource
 import com.example.data.store.UserPreferences
 
 class DataStoreRepository(
@@ -35,15 +35,11 @@ class DataStoreRepository(
             DataStoreState.FailedToSetPreferences(country)
         }
 
-    // TODO: gross. Do better
-    private fun makeCity(prefs: UserPreferences) : City? =
-        listOfNotNull(prefs.name, prefs.lat, prefs.lon)
-            .takeIf { it.isNotEmpty() }
-            ?.let { nnPrefs ->
-                City(nnPrefs[0] as String,
-                    nnPrefs[1] as Double,
-                    nnPrefs[2] as Double,
-                    prefs.id)
-            }
+    private fun makeCity(prefs: UserPreferences): City? =
+        if (prefs.name.isNullOrBlank()) {
+            null
+        } else {
+            City(prefs.country ?: "", "", prefs.name, prefs.lat ?: 0.0, prefs.lon ?: 0.0)
+        }
 }
 

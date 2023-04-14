@@ -52,7 +52,7 @@ class WeatherSearchTest {
     @MockK
     private lateinit var weatherLiveDataObserver: Observer<WeatherResult>
 
-    private val someCity: City = City("Chicago", 41.8755616, -87.6244212)
+    private val someCity: City = City("", "", "Chicago", 41.8755616, -87.6244212)
     private val showLoading: WeatherResult = WeatherResult.ShowLoading
     private val hideLoading: WeatherResult = WeatherResult.HideLoading
     private lateinit var weatherSearchViewModel: WeatherSearchViewModel

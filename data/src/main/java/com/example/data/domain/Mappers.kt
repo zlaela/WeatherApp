@@ -1,19 +1,21 @@
 package com.example.data.domain
 
-import com.example.data.api.response.city.Cities
 import com.example.data.api.response.city.CityItem
 import com.example.data.api.response.weather.CurrentWeatherResponse
 import com.example.data.api.response.weather.FiveDayForecastResponse
 
-fun Cities.mapToCitiesList() =
+fun List<CityItem>.mapToCitiesList(): List<City> =
     this.map {
         it.mapToCity()
     }
 
 fun CityItem.mapToCity(): City {
-    this.let {
-        listOfNotNull(it.name, it.lat, it.lon).apply {
-            return City(this[0] as String, this[1] as Double, this[2] as Double)
+    this.run {
+        println("City item is $this")
+        return if (name == null) {
+            City("", "", "Unknown City", 0.0, 0.0)
+        } else {
+            City(country ?: "", state ?: "", name, lat ?: 0.0, lon ?: 0.0)
         }
     }
 }
