@@ -5,4 +5,9 @@ object TestTags {
     const val MAIN = "MAIN"
     const val SPINNER = "SPINNER"
     const val SEARCH_FIELD = "SEARCH_FIELD"
+    const val LOCATION_ICON = "LOCATION_ICON"
+    const val APP_BAR = "APP_BAR"
+    const val SEARCH_ICON = "SEARCH_ICON"
+    const val CITY_RESULTS_LIST = "CITY_RESULTS_LIST"
+    const val CITY_RESULT = "CITY_RESULT"
 }
