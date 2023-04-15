@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.example.weatherapp.R
+import com.example.weatherapp.ui.TestTags
 import com.example.weatherapp.ui.navigation.Screens
 import kotlinx.coroutines.delay
 
@@ -38,7 +39,7 @@ fun AppSplashScreen(navController: NavController) {
         navController.navigate(route = Screens.Home.route)
     }
 
-    Surface(modifier = Modifier.testTag("Splash")) {
+    Surface(modifier = Modifier.testTag(TestTags.SPLASH)) {
         Column(modifier = Modifier
             .fillMaxSize()
             .background(colors.primary)

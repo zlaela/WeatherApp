@@ -10,14 +10,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.weatherapp.ui.TestTags
 
 @Composable
 fun HomeScreen(navController: NavController) {
     Scaffold(
-        modifier = Modifier.testTag("Main"),
+        modifier = Modifier.testTag(TestTags.MAIN),
         topBar = {
-            TopAppBar(backgroundColor = Color.Transparent,
-                elevation = 0.dp) {
+            TopAppBar(
+                backgroundColor = Color.Transparent, elevation = 0.dp
+            ) {
                 Text(text = "Weather App")
             }
         },

@@ -6,6 +6,7 @@ import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.example.weatherapp.MainActivity
+import com.example.weatherapp.ui.TestTags
 import org.junit.Rule
 import org.junit.Test
 
@@ -22,7 +23,7 @@ class AppLaunchTest {
 
     private fun splashScreenDisplayed() {
         rule.onNode(
-            matcher = hasTestTag(testTag = "Splash")
+            matcher = hasTestTag(testTag = TestTags.SPLASH)
         )
             .assertIsDisplayed()
     }
@@ -30,7 +31,7 @@ class AppLaunchTest {
     private fun navigatesToMainScreen() {
         rule.mainClock.advanceTimeBy(2000L)
         rule.onNode(
-            matcher = hasTestTag(testTag = "Main")
+            matcher = hasTestTag(testTag = TestTags.MAIN)
         )
             .assertIsDisplayed()
     }
