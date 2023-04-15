@@ -1,5 +1,8 @@
 package com.example.weatherapp.ui.screens.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -97,13 +100,13 @@ fun CitySearchBarAndResults(
 fun ShowCities(onCitySelected: (City) -> Unit, cities: List<City>) {
     var expanded by remember { mutableStateOf(true) }
 
-    LazyColumn(
-        modifier = Modifier.testTag(TestTags.CITY_RESULTS_LIST),
-        contentPadding = PaddingValues(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        if (expanded) {
+    AnimatedVisibility(expanded, enter = slideInVertically(), exit = shrinkVertically()) {
+        LazyColumn(
+            modifier = Modifier.testTag(TestTags.CITY_RESULTS_LIST),
+            contentPadding = PaddingValues(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             items(cities.size) { index ->
                 val thisCity = cities[index]
                 Card(
