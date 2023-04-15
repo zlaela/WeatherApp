@@ -24,8 +24,9 @@ fun SearchBar(
     trailingIcon: @Composable() (() -> Unit)? = null,
     onLeadingIconClick: () -> Unit = {},
     onTrailingIconClick: () -> Unit = {},
-    onSearchFieldBlank: () -> Unit = {},
-    onKeyboardDone: (String) -> Unit = {},
+    onTextFieldBlank: () -> Unit = {},
+    onTextFieldChanged: (String) -> Unit = {},
+    onKeyboardDone: () -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     var textFieldText by remember { mutableStateOf("") }
@@ -38,9 +39,10 @@ fun SearchBar(
         value = textFieldText,
         onValueChange = { searchTerm ->
             if (searchTerm.isBlank() || searchTerm.isEmpty()) {
-                onSearchFieldBlank()
+                onTextFieldBlank()
             }
             textFieldText = searchTerm
+            onTextFieldChanged(textFieldText)
         },
         label = { Text(text = searchHint) },
         enabled = enabled,
@@ -68,8 +70,8 @@ fun SearchBar(
         ),
         keyboardActions = KeyboardActions(
             onDone = {
-                // Send the text field content to be processed
-                onKeyboardDone(textFieldText)
+                // Notify
+                onKeyboardDone()
                 // Hide keyboard
                 keyboardController?.hide()
             }
