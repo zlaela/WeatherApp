@@ -23,15 +23,15 @@ import com.example.data.domain.City
 import com.example.data.search.SearchState
 import com.example.weatherapp.R
 import com.example.weatherapp.ui.TestTags
+import com.example.weatherapp.ui.composable.AppTopAppBar
 import com.example.weatherapp.ui.composable.FullScreenCenteredSpinner
 import com.example.weatherapp.ui.composable.SearchBar
 import com.example.weatherapp.viewmodel.CitySearchViewModel
 
 @Composable
-fun CitySearchBarAndResults(
+fun CitySearchAppBar(
     citySearchViewModel: CitySearchViewModel,
     cityStates: State<SearchState>,
-    onCitySelected: (City) -> Unit,
 ) {
     var error by remember { mutableStateOf(false) }
     var enabled by rememberSaveable { mutableStateOf(true) }
@@ -49,6 +49,7 @@ fun CitySearchBarAndResults(
     )
 
     Column {
+        AppTopAppBar()
         SearchBar(enabled = enabled,
             searchHint = hint,
             isError = error,
@@ -80,15 +81,13 @@ fun CitySearchBarAndResults(
             }
             is SearchState.CitiesResult -> {
                 enabled = true
-                ShowCities(onCitySelected, cities = cityState.results)
             }
             is SearchState.ZipResult -> {
                 enabled = true
-                ShowCities(onCitySelected, cities = listOf(cityState.results))
             }
-            is SearchState.Loading -> {
-                enabled = false
-                FullScreenCenteredSpinner(cityState.isLoading)
+            is SearchState.Loading -> with(cityState.isLoading) {
+                enabled = !this
+                FullScreenCenteredSpinner(this)
             }
             SearchState.InvalidString -> error = true
             SearchState.Initial -> textFieldContents = hint
@@ -97,7 +96,33 @@ fun CitySearchBarAndResults(
 }
 
 @Composable
-fun ShowCities(onCitySelected: (City) -> Unit, cities: List<City>) {
+fun FetchedCitiesListDropdown(
+    onCitySelected: (City) -> Unit,
+    cityStates: State<SearchState>,
+) {
+    var isVisible by remember { mutableStateOf(false) }
+
+    val onResultsVisible: (Boolean) -> Unit = { dropdownExpanded ->
+        isVisible = dropdownExpanded
+    }
+
+    when (val cityState = cityStates.value) {
+        is SearchState.CitiesResult -> {
+            ShowCities(onResultsVisible, onCitySelected, cities = cityState.results)
+        }
+        is SearchState.ZipResult -> {
+            ShowCities(onResultsVisible, onCitySelected, cities = listOf(cityState.results))
+        }
+        else -> {}
+    }
+}
+
+@Composable
+fun ShowCities(
+    onResultsVisible: (Boolean) -> Unit,
+    onCitySelected: (City) -> Unit,
+    cities: List<City>
+) {
     var expanded by remember { mutableStateOf(true) }
 
     AnimatedVisibility(expanded, enter = slideInVertically(), exit = shrinkVertically()) {
@@ -112,7 +137,7 @@ fun ShowCities(onCitySelected: (City) -> Unit, cities: List<City>) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(4.dp)
+                        .padding(1.dp)
                         .testTag(TestTags.CITY_RESULT)
                         .clickable {
                             onCitySelected(thisCity)
@@ -127,6 +152,7 @@ fun ShowCities(onCitySelected: (City) -> Unit, cities: List<City>) {
             }
         }
     }
+    onResultsVisible(expanded)
 }
 
 private fun makeCityText(thisCity: City) =

@@ -1,6 +1,5 @@
 package com.example.weatherapp.ui.search
 
-import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -47,11 +46,11 @@ class TestRunner(
     }
 
     fun selectFirstCity(city: City) {
-        val cityText = "${city.name}:: ${city.state}, ${city.country} -- ${city.lat} ${city.lon}"
+        val cityText = listOfNotNull(city.name, city.state, city.country).joinToString(", ")
         rule.onNodeWithText(cityText)
             .assertIsDisplayed()
             .performClick()
-            .performSemanticsAction(SemanticsActions.OnClick)
+        rule.mainClock.advanceTimeBy(1000L)
     }
 
     class CitiesSearchVerification(
@@ -64,17 +63,15 @@ class TestRunner(
                 .assertCountEquals(cities.size)
 
             cities.forEach { city ->
-                rule.onNodeWithText("${city.name}:: ${city.state}, ${city.country} -- ${city.lat} ${city.lon}")
+                val cityText = listOfNotNull(city.name, city.state, city.country).joinToString(", ")
+                rule.onNodeWithText(cityText)
                     .assertIsDisplayed()
             }
         }
 
-        fun searchResultsAreHidden(resultsSize: Int) {
-            for(i in 0 until resultsSize) {
-                rule.onNodeWithTag(TestTags.CITY_RESULTS_LIST)
-                    .onChildAt(i)
-                    .assertIsNotDisplayed()
-            }
+        fun searchResultsAreHidden() {
+            rule.onAllNodesWithTag(TestTags.CITY_RESULT)
+                .assertCountEquals(0)
         }
 
         fun invalidTextIsDisplayed() {

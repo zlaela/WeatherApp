@@ -41,7 +41,7 @@ class CitySearchTest {
             waitForExpectedResultsSize(fetchedCities.size)
             selectFirstCity(fetchedCities.first())
         } verify {
-            searchResultsAreHidden(fetchedCities.size)
+            searchResultsAreHidden()
         }
     }
 
