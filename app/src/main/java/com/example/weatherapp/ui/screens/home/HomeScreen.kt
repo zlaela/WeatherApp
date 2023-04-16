@@ -1,7 +1,7 @@
 package com.example.weatherapp.ui.screens.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme.colors
@@ -16,7 +16,6 @@ import androidx.navigation.NavController
 import com.example.data.domain.City
 import com.example.data.search.SearchState
 import com.example.weatherapp.ui.TestTags
-import com.example.weatherapp.ui.composable.AppTopAppBar
 import com.example.weatherapp.viewmodel.CitySearchViewModel
 
 @Composable
@@ -35,18 +34,19 @@ fun HomeScreen(
         modifier = Modifier
             .testTag(TestTags.MAIN)
             .background(colors.background),
-        topBar = { AppTopAppBar() },
+        topBar = {
+            CitySearchAppBar(
+                citySearchViewModel = citySearchViewModel, cityStates = cityStates
+            )
+        },
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            CitySearchBarAndResults(
-                citySearchViewModel = citySearchViewModel,
-                cityStates = cityStates,
-                onCitySelected = onCitySelected
-            )
+            WeatherCard()
+            FetchedCitiesListDropdown(onCitySelected, cityStates)
         }
     }
 }
