@@ -15,37 +15,54 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.data.domain.City
 import com.example.data.search.SearchState
+import com.example.data.search.WeatherResult
 import com.example.weatherapp.ui.TestTags
 import com.example.weatherapp.viewmodel.CitySearchViewModel
+import com.example.weatherapp.viewmodel.WeatherSearchViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavController,
+    weatherSearchViewModel: WeatherSearchViewModel = hiltViewModel(),
     citySearchViewModel: CitySearchViewModel = hiltViewModel(),
 ) {
-    val cityStates: State<SearchState> =
-        citySearchViewModel.searchLiveData.observeAsState(SearchState.Initial)
-
     val onCitySelected: (City) -> Unit = { selectedCity ->
-        // TODO: Get weather for this city
+        weatherSearchViewModel.getWeatherFor(selectedCity)
     }
 
-    Scaffold(
-        modifier = Modifier
-            .testTag(TestTags.MAIN)
-            .background(colors.background),
+    val weatherStates = weatherSearchViewModel.weatherLiveData.observeAsState(WeatherResult.Initial)
+    val cityStates = citySearchViewModel.searchLiveData.observeAsState(SearchState.Initial)
+
+    Home(
+        onCitySelected = onCitySelected,
+        cityStates = cityStates,
+        weatherStates = weatherStates,
         topBar = {
             CitySearchAppBar(
                 citySearchViewModel = citySearchViewModel, cityStates = cityStates
             )
-        },
+        }
+    )
+}
+
+@Composable
+fun Home(
+    cityStates: State<SearchState>,
+    weatherStates: State<WeatherResult>,
+    onCitySelected: (City) -> Unit,
+    topBar: @Composable () -> Unit,
+) {
+    Scaffold(
+        modifier = Modifier.testTag(TestTags.MAIN),
+        topBar = { topBar() },
     ) { padding ->
         Box(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
+                .background(colors.primary)
         ) {
-            WeatherCard()
+            WeatherCard(padding, weatherStates)
             FetchedCitiesListDropdown(onCitySelected, cityStates)
         }
     }
