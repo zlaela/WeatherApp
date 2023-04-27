@@ -2,7 +2,6 @@ package com.example.weatherapp.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.data.domain.City
 import com.example.data.repository.DataStoreRepository
@@ -19,34 +18,55 @@ class WeatherSearchViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository,
 ) : CoroutineViewModel(dispatchers) {
 
-    val getPrefsOnStart = liveData {
-        emit(dataStoreRepository.getPreferences())
-    }
-
     private val _weatherLiveData = MutableLiveData<WeatherResult>()
     val weatherLiveData: LiveData<WeatherResult> = _weatherLiveData
 
+    init {
+        viewModelScope.launch {
+            dataStoreRepository.getStoredCity()?.let {
+                asyncSearch {
+                    weatherRepository.getCurrentWeather(it)
+                }
+            }
+        }
+    }
+
     fun getWeatherFor(someCity: City) {
         viewModelScope.launch {
-            asyncSearch { weatherRepository.getCurrentWeather(someCity) }
+            asyncSearch {
+                updatePrefs(someCity)
+                weatherRepository.getCurrentWeather(someCity)
+            }
         }
     }
 
     fun getForecast(someCity: City) {
         viewModelScope.launch {
-            asyncSearch { weatherRepository.getForecast(someCity) }
+            asyncSearch {
+                updatePrefs(someCity)
+                weatherRepository.getCurrentWeather(someCity)
+            }
         }
     }
 
     private fun asyncSearch(doAsync: suspend () -> WeatherResult) {
         _weatherLiveData.value = WeatherResult.Loading(true)
-        launch(dispatchers.background) {
+        launch(dispatchers.background + exceptionContext) {
             // on background thread
             val result = doAsync()
             // on ui thread
             launch(dispatchers.ui) {
                 _weatherLiveData.value = WeatherResult.Loading(false)
                 _weatherLiveData.value = result
+            }
+        }
+    }
+
+    private suspend fun updatePrefs(city: City) {
+        launch(dispatchers.background) {
+            dataStoreRepository.updateCity(city)
+            if (city.country.isNotBlank()) {
+                dataStoreRepository.updateCountry(city.country)
             }
         }
     }
