@@ -9,6 +9,11 @@ import com.example.data.store.UserPreferences
 class DataStoreRepository(
     private val dataSource: PreferencesDataSource,
 ) {
+    suspend fun getStoredCity(): City? = when (val prefs = getPreferences()) {
+        is DataStoreState.GetPreferencesSuccess -> prefs.city
+        else -> null
+    }
+
     suspend fun getPreferences(): DataStoreState {
         return try {
             val prefs = dataSource.getPreferences()
