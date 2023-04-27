@@ -17,34 +17,27 @@ import com.example.weatherapp.ui.TestTags
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchBar(
+    value: String,
     enabled: Boolean,
     isError: Boolean,
-    searchHint: String,
+    searchHint: @Composable () -> Unit,
     leadingIcon: @Composable() (() -> Unit)? = null,
     trailingIcon: @Composable() (() -> Unit)? = null,
     onLeadingIconClick: () -> Unit = {},
     onTrailingIconClick: () -> Unit = {},
-    onTextFieldBlank: () -> Unit = {},
     onTextFieldChanged: (String) -> Unit = {},
     onKeyboardDone: () -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var textFieldText by remember { mutableStateOf("") }
 
     OutlinedTextField(
         modifier = Modifier
             .padding(start = 4.dp, end = 4.dp)
             .fillMaxWidth()
             .testTag(TestTags.SEARCH_FIELD),
-        value = textFieldText,
-        onValueChange = { searchTerm ->
-            if (searchTerm.isBlank() || searchTerm.isEmpty()) {
-                onTextFieldBlank()
-            }
-            textFieldText = searchTerm
-            onTextFieldChanged(textFieldText)
-        },
-        label = { Text(text = searchHint) },
+        value = value,
+        onValueChange = { onTextFieldChanged(it) },
+        label = searchHint,
         enabled = enabled,
         leadingIcon = {
             leadingIcon?.let { icon ->

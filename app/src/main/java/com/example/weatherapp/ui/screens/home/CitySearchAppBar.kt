@@ -24,7 +24,6 @@ import com.example.data.search.SearchState
 import com.example.weatherapp.R
 import com.example.weatherapp.ui.TestTags
 import com.example.weatherapp.ui.composable.AppTopAppBar
-import com.example.weatherapp.ui.composable.FullScreenCenteredSpinner
 import com.example.weatherapp.ui.composable.SearchBar
 import com.example.weatherapp.viewmodel.CitySearchViewModel
 
@@ -50,8 +49,10 @@ fun CitySearchAppBar(
 
     Column {
         AppTopAppBar()
-        SearchBar(enabled = enabled,
-            searchHint = hint,
+        SearchBar(
+            value = textFieldContents,
+            enabled = enabled,
+            searchHint = { Text(text = hint) },
             isError = error,
             trailingIcon = {
                 Icon(
@@ -69,11 +70,17 @@ fun CitySearchAppBar(
             },
             onLeadingIconClick = { /* TODO: location */ },
             onTrailingIconClick = { search(textFieldContents) },
-            onTextFieldBlank = { error = false },
-            onTextFieldChanged = { newString -> textFieldContents = newString },
-            onKeyboardDone = { search(textFieldContents) })
+            onTextFieldChanged = { newText ->
+                if (newText.isBlank() || newText.isEmpty()) {
+                    error = false
+                }
+                textFieldContents = newText
+            },
+            onKeyboardDone = { search(textFieldContents) }
+        )
 
         when (val cityState = cityStates.value) {
+            is SearchState.Initial -> {}
             is SearchState.Failure -> {
                 error = true
                 enabled = false
@@ -85,12 +92,8 @@ fun CitySearchAppBar(
             is SearchState.ZipResult -> {
                 enabled = true
             }
-            is SearchState.Loading -> with(cityState.isLoading) {
-                enabled = !this
-                FullScreenCenteredSpinner(this)
-            }
+            is SearchState.Loading -> enabled = !cityState.isLoading
             SearchState.InvalidString -> error = true
-            SearchState.Initial -> textFieldContents = hint
         }
     }
 }
