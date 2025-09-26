@@ -3,7 +3,6 @@ package com.example.data.repository
 import com.example.data.api.GeoApi
 import com.example.data.domain.mapToCitiesList
 import com.example.data.domain.mapToCity
-import com.example.data.exception.HttpException
 import com.example.data.search.SearchState
 
 class SearchRepository(private val geoApi: GeoApi) {
@@ -12,7 +11,7 @@ class SearchRepository(private val geoApi: GeoApi) {
         return try {
             val result = geoApi.searchCityAsync(someCity).await().mapToCitiesList()
             SearchState.CitiesResult(result)
-        } catch (ex: HttpException) {
+        } catch (ex: retrofit2.HttpException) {
             SearchState.Failure("Failed")
         }
     }
@@ -22,7 +21,7 @@ class SearchRepository(private val geoApi: GeoApi) {
         return try {
             val result = geoApi.searchZipAsync(someZip).await().mapToCity()
             SearchState.ZipResult(result)
-        } catch (ex: HttpException) {
+        } catch (ex: retrofit2.HttpException) {
             SearchState.Failure("Failed")
         }
     }
