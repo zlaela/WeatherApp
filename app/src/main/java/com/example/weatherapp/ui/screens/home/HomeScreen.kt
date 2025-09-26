@@ -4,8 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
@@ -60,7 +60,7 @@ fun Home(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(colors.primary)
+                .background(MaterialTheme.colorScheme.primary)
         ) {
             WeatherCard(padding, weatherStates)
             FetchedCitiesListDropdown(onCitySelected, cityStates)

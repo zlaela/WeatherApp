@@ -8,8 +8,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.Surface
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -42,7 +42,7 @@ fun AppSplashScreen(navController: NavController) {
     Surface(modifier = Modifier.testTag(TestTags.SPLASH)) {
         Column(modifier = Modifier
             .fillMaxSize()
-            .background(colors.primary)
+            .background(MaterialTheme.colorScheme.primary)
             .graphicsLayer {
                 this.scaleX = scale.value
                 this.scaleY = scale.value
