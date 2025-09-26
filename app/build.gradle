@@ -1,19 +1,20 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
-    id 'de.mannodermaus.android-junit5'
-    id 'dagger.hilt.android.plugin'
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.android.junit5)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace 'com.example.weatherapp'
-    compileSdk 33
+    compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
         applicationId "com.example.weatherapp"
-        minSdk 24
-        targetSdk 33
+        minSdk libs.versions.min.sdk.get().toInteger()
+        targetSdk libs.versions.target.sdk.get().toInteger()
         versionCode 1
         versionName "1.0"
 
@@ -37,8 +38,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -46,9 +47,7 @@ android {
     buildFeatures {
         compose true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.4.4'
-    }
+
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
@@ -56,68 +55,73 @@ android {
     }
 }
 
+kotlin {
+    jvmToolchain(8)
+}
+
 dependencies {
     implementation project(':data')
 
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
-    implementation 'androidx.activity:activity-compose:1.7.0'
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.lifecycle.runtime
+    implementation libs.androidx.lifecycle.livedata
+    implementation libs.androidx.lifecycle.viewmodel
+    implementation libs.androidx.activity.compose
 
     // material
-    implementation 'androidx.compose.material:material:1.4.1'
-    implementation 'androidx.compose.material3:material3:1.1.0-beta01'
+    implementation libs.androidx.compose.material
+    implementation libs.androidx.compose.material3
 
     // Navigation
-    implementation "androidx.navigation:navigation-compose:$navigation_version"
+    implementation libs.androidx.navigation.compose
 
     // Compose
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation "androidx.compose.animation:animation-core:$compose_version"
-    implementation "androidx.compose.runtime:runtime-livedata:1.4.1"
+    implementation libs.androidx.compose.ui
+    implementation libs.androidx.compose.ui.tooling
+    implementation libs.androidx.compose.animation
+    implementation libs.androidx.compose.runtime.livedata
 
     // Moshi
-    implementation "com.squareup.moshi:moshi:$moshi_version"
-    implementation "com.squareup.moshi:moshi-adapters:$moshi_version"
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.14.0'
+    implementation libs.moshi
+    implementation libs.moshi.adapters
+    ksp libs.moshi.kotlin.codegen
 
     // DataStore
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation libs.androidx.datastore.preferences
 
     // Location services
-    implementation "com.google.android.gms:play-services-location:21.0.1"
+    implementation libs.play.services.location
 
     // Dagger-Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    implementation libs.dagger.hilt.android
+    ksp libs.dagger.hilt.android.compiler
 
     // Hilt niceties
-    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
-    kapt "androidx.hilt:hilt-compiler:1.0.0"
+    implementation libs.hilt.navigation.compose
+    ksp libs.hilt.compiler
 
-    testImplementation "androidx.test:core:$android_test_core_version"
-    testImplementation "androidx.arch.core:core-testing:$core_testing_version"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:$junit_version"
-    testImplementation "org.mockito:mockito-junit-jupiter:$mockito_jupiter_version"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
-    testImplementation "io.mockk:mockk:$mockk_version"
+    testImplementation libs.androidx.test.core
+    testImplementation libs.androidx.arch.core.testing
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.junit.jupiter.params
+    testImplementation libs.mockito.junit.jupiter
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.mockk
 
-    androidTestImplementation "androidx.test:runner:1.4.0"
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation "androidx.test:rules:1.5.0"
-    androidTestImplementation "org.mockito:mockito-android:3.5.11"
-    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
+    androidTestImplementation libs.android.test.runner
+    androidTestImplementation libs.android.test.ext.junit
+    androidTestImplementation libs.espresso.core
+    androidTestImplementation libs.android.test.rules
+    androidTestImplementation libs.mockito.android
+    androidTestImplementation libs.kotlinx.coroutines.test
 
-    androidTestImplementation "androidx.compose.ui:ui-test"
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+    androidTestImplementation libs.androidx.compose.ui.test
+    androidTestImplementation libs.androidx.compose.ui.test.junit4
+    debugImplementation libs.androidx.compose.ui.tooling.debug
+    debugImplementation libs.androidx.compose.ui.test.manifest
 
-    androidTestImplementation "org.junit.jupiter:junit-jupiter:$junit_version"
-    androidTestImplementation "de.mannodermaus.junit5:android-test-core:1.3.0"
-    androidTestRuntimeOnly "de.mannodermaus.junit5:android-test-runner:1.3.0"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
+    androidTestImplementation libs.junit.jupiter
+    androidTestImplementation libs.junit5.android.test.core
+    androidTestRuntimeOnly libs.junit5.android.test.runner
+    testRuntimeOnly libs.junit.jupiter.engine
 }
