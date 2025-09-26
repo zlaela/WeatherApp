@@ -69,24 +69,12 @@ kotlin {
 dependencies {
     implementation(project(":data"))
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime)
-    implementation(libs.androidx.lifecycle.livedata)
-    implementation(libs.androidx.lifecycle.viewmodel)
-    implementation(libs.androidx.activity.compose)
-
-    // material
-    implementation(libs.androidx.compose.material)
-    implementation(libs.androidx.compose.material3)
-
-    // Navigation
-    implementation(libs.androidx.navigation.compose)
+    // Androidx
+    implementation(libs.bundles.androidx)
 
     // Compose
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.tooling)
-    implementation(libs.androidx.compose.animation)
-    implementation(libs.androidx.compose.runtime.livedata)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.bundles.compose)
 
     // Moshi
     implementation(libs.moshi)
@@ -122,10 +110,9 @@ dependencies {
     androidTestImplementation(libs.mockito.android)
     androidTestImplementation(libs.kotlinx.coroutines.test)
 
-    androidTestImplementation(libs.androidx.compose.ui.test)
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.tooling.debug)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.bundles.compose.debug.android)
+    debugImplementation(libs.bundles.compose.debug)
 
     androidTestImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.junit5.android.test.core)

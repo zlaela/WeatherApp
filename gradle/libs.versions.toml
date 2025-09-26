@@ -11,17 +11,13 @@ target-sdk = "33"
 # Core Android
 androidx-core = "1.9.0"
 androidx-lifecycle = "2.6.1"
-androidx-activity = "1.7.0"
+androidx-activity-compose = "1.7.0"
 androidx-datastore = "1.0.0"
 
 # Compose
-compose = "1.5.4"
-compose-material = "1.4.1"
-compose-material3 = "1.1.0-beta01"
 compose-runtime-livedata = "1.4.1"
-
-# Navigation
-navigation = "2.5.3"
+compose-bom = "2024.09.02"
+compose-navigation = "2.6.0"
 
 # Dependency Injection
 hilt = "2.52"
@@ -64,23 +60,22 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity-compose" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidx-datastore" }
 
 # Compose
-androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
-androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
-androidx-compose-ui-tooling-debug = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
-androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test", version.ref = "compose" }
-androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose" }
-androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "compose" }
-androidx-compose-animation = { group = "androidx.compose.animation", name = "animation-core", version.ref = "compose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "compose-runtime-livedata" }
-androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "compose-material" }
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "compose-material3" }
-
-# Navigation
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
+androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test" }
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-compose-ui-tooling-debug = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 
 # Dependency Injection
 dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
@@ -127,6 +122,12 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 android-test-rules = { group = "androidx.test", name = "rules", version.ref = "android-test-rules" }
 junit5-android-test-core = { group = "de.mannodermaus.junit5", name = "android-test-core", version.ref = "junit5-android" }
 junit5-android-test-runner = { group = "de.mannodermaus.junit5", name = "android-test-runner", version.ref = "junit5-android" }
+
+[bundles]
+androidx = ["androidx-core-ktx", "androidx-lifecycle-runtime", "androidx-lifecycle-livedata", "androidx-lifecycle-viewmodel", "androidx-activity-compose"]
+compose = ["androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling", "androidx-ui-tooling-preview", "androidx-material3", "androidx-navigation", "androidx-compose-runtime-livedata"]
+compose-debug = ["androidx-compose-ui-tooling-debug", "androidx-compose-ui-test-manifest"]
+compose-debug-android =["androidx-compose-ui-test", "androidx-compose-ui-test-junit4"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
