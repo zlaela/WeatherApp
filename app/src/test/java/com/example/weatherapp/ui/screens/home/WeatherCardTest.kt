@@ -40,11 +40,24 @@ class WeatherCardTest {
         assertEquals("Search for a city to see weather", result)
     }
 
+    @Test
+    fun `displays error state when weather fetch fails`() {
+        // Given error state
+        val errorReason = "Network error"
+        weatherStates = mutableStateOf(WeatherResult.Failure(errorReason))
+
+        // When WeatherCard is created
+        val result = getTextFromWeatherState(weatherStates)
+
+        // Then it shows error message with reason
+        assertEquals("Failed to load weather: $errorReason", result)
+    }
+
     // Helper function to simulate the WeatherCard's text generation logic
-    private fun getTextFromWeatherState(state: State<WeatherResult>): String = when (state.value) {
-        is WeatherResult.Initial -> {
-            "Search for a city to see weather"
-        }
+    private fun getTextFromWeatherState(state: State<WeatherResult>): String =
+        when ( val state = state.value) {
+        is WeatherResult.Initial ->  "Search for a city to see weather"
+        is WeatherResult.Failure -> "Failed to load weather: ${state.reason}"
         else -> { "TODO" }
     }
 }

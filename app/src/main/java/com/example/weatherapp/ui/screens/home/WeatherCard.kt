@@ -1,10 +1,17 @@
 package com.example.weatherapp.ui.screens.home
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,9 +36,9 @@ fun WeatherCard(
             .testTag(TestTags.CITY_WEATHER),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        when (weatherStates.value) {
+        when (val state = weatherStates.value) {
             WeatherResult.Initial -> InitialWeatherState()
-            is WeatherResult.Failure -> {}
+            is WeatherResult.Failure -> ErrorWeatherState(state.reason)
             is WeatherResult.ForecastSuccess -> {}
             is WeatherResult.Loading -> {}
             is WeatherResult.WeatherSuccess -> {}
@@ -52,5 +59,38 @@ private fun InitialWeatherState() {
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+    }
+}
+
+@Composable
+private fun ErrorWeatherState(reason: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.dp), contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = Icons.Default.Warning,
+                contentDescription = stringResource(R.string.error),
+                modifier = Modifier.size(32.dp),
+                tint = MaterialTheme.colorScheme.error
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.failed_to_load_weather),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.error
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = reason,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
