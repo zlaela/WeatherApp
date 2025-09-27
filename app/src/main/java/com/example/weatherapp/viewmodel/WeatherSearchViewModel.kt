@@ -2,11 +2,13 @@ package com.example.weatherapp.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.data.domain.City
 import com.example.data.repository.DataStoreRepository
 import com.example.data.repository.WeatherSearchRepository
 import com.example.data.search.WeatherResult
+import com.example.data.store.DataStoreState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +22,10 @@ class WeatherSearchViewModel @Inject constructor(
 
     private val _weatherLiveData = MutableLiveData<WeatherResult>()
     val weatherLiveData: LiveData<WeatherResult> = _weatherLiveData
+
+    val getPrefsOnStart: LiveData<DataStoreState> = liveData {
+        emit(dataStoreRepository.getPreferences())
+    }
 
     init {
         viewModelScope.launch {
@@ -44,7 +50,7 @@ class WeatherSearchViewModel @Inject constructor(
         viewModelScope.launch {
             asyncSearch {
                 updatePrefs(someCity)
-                weatherRepository.getCurrentWeather(someCity)
+                weatherRepository.getForecast(someCity)
             }
         }
     }
