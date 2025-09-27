@@ -10,11 +10,13 @@ interface WeatherApi {
     @GET("data/2.5/weather")
     fun getCurrentWeather(
         @Query("q") city: String,
+        @Query("units") units: String = "imperial",
     ): Deferred<CurrentWeatherResponse>
 
     @GET("data/2.5/forecast")
     fun getForecast(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
+        @Query("units") units: String = "imperial",
     ): Deferred<FiveDayForecastResponse>
 }
