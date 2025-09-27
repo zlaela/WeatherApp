@@ -89,6 +89,19 @@ class WeatherCardTest {
             val capitalizedDescription = weather.description.replaceFirstChar { it.uppercase() }
             "${weather.city} - $capitalizedDescription - ${weather.temp.formatTemp()}°C (Feels like ${weather.feelsLike.formatTemp()}°C) - High: ${weather.tempMax.formatTemp()}°C, Low: ${weather.tempMin.formatTemp()}°C"
         }
+        is WeatherResult.Loading ->  "Loading weather..."
         else -> { "TODO" }
+    }
+
+    @Test
+    fun `displays loading state while fetching weather data`() {
+        // Given loading state
+        weatherStates = mutableStateOf(WeatherResult.Loading(true))
+
+        // When WeatherCard is created
+        val result = getTextFromWeatherState(weatherStates)
+
+        // Then it shows loading message
+        assertEquals("Loading weather...", result)
     }
 }

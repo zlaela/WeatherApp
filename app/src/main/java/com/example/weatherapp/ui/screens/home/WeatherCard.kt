@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -45,7 +46,7 @@ fun WeatherCard(
             WeatherResult.Initial -> InitialWeatherState()
             is WeatherResult.Failure -> ErrorWeatherState(state.reason)
             is WeatherResult.ForecastSuccess -> {}
-            is WeatherResult.Loading -> {}
+            is WeatherResult.Loading -> LoadingWeatherState()
             is WeatherResult.WeatherSuccess -> SuccessWeatherState(state.locationWeather)
         }
     }
@@ -193,6 +194,29 @@ private fun SuccessWeatherState(weather: com.example.data.domain.CurrentWeather)
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun LoadingWeatherState() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.dp), contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(32.dp), color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(R.string.loading_weather),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }

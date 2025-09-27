@@ -22,4 +22,5 @@
     <string name="temp_c">%1$s°C</string>
     <string name="low">Low</string>
     <string name="search_for_a_location">Search for a city to see weather</string>
+    <string name="loading_weather">Loading weather...</string>
 </resources>
