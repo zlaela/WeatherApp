@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -142,7 +143,7 @@ private fun SuccessWeatherState(weather: com.example.data.domain.CurrentWeather)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "°C",
+                text = stringResource(R.string.deg_f),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -172,7 +173,7 @@ private fun SuccessWeatherState(weather: com.example.data.domain.CurrentWeather)
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = stringResource(R.string.temp_c, weather.tempMax.formatTemp()),
+                    text = stringResource(R.string.temp_f, weather.tempMax.formatTemp()),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface
@@ -188,7 +189,7 @@ private fun SuccessWeatherState(weather: com.example.data.domain.CurrentWeather)
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = stringResource(R.string.temp_c, weather.tempMin.formatTemp()),
+                    text = stringResource(R.string.temp_f, weather.tempMin.formatTemp()),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface

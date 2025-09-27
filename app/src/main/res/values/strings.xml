@@ -20,7 +20,10 @@
     <string name="feels_like_c">Feels like %1$s°C</string>
     <string name="high">High</string>
     <string name="temp_c">%1$s°C</string>
+    <string name="temp_f">%1$s°F</string>
     <string name="low">Low</string>
     <string name="search_for_a_location">Search for a city to see weather</string>
     <string name="loading_weather">Loading weather...</string>
+    <string name="deg_c">°C</string>
+    <string name="deg_f">°F</string>
 </resources>
