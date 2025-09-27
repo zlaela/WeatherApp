@@ -4,9 +4,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.android.junit5)
 }
 
 android {
@@ -41,16 +39,17 @@ android {
     }
     
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = libs.versions.kotlin.jvm.target.get()
     }
     
     buildFeatures {
         buildConfig = true
     }
-    
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
+
+    testOptions.unitTests {
+        isReturnDefaultValues = true
+        all { tests ->
+            tests.useJUnitPlatform()
         }
     }
     
@@ -60,10 +59,6 @@ android {
             events("passed", "skipped", "failed")
         }
     }
-}
-
-kotlin {
-    jvmToolchain(8)
 }
 
 dependencies {
@@ -98,13 +93,8 @@ dependencies {
     ksp(libs.dagger.hilt.android.compiler)
 
     // Testing
-    testImplementation(libs.androidx.test.core)
-    testImplementation(libs.androidx.arch.core.testing)
-    testImplementation(libs.junit.jupiter.api)
-    testImplementation(libs.mockito.junit.jupiter)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.mockk)
-    testImplementation(libs.mockwebserver)
+    androidTestRuntimeOnly(libs.android.test.runner)
 
+    testImplementation(libs.bundles.unit.test)
     testRuntimeOnly(libs.junit.jupiter.engine)
 }

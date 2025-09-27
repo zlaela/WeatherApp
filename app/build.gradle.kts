@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.android.junit5)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -19,7 +18,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["runnerBuilder"] = "de.mannodermaus.junit5.AndroidJUnit5Builder"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -35,22 +33,23 @@ android {
             )
         }
     }
-    
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
+
+    testOptions.unitTests {
+        isReturnDefaultValues = true
+        all { tests ->
+            tests.useJUnitPlatform()
         }
     }
-    
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = libs.versions.kotlin.jvm.target.get()
     }
-    
+
     buildFeatures {
         compose = true
     }
@@ -60,10 +59,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-}
-
-kotlin {
-    jvmToolchain(8)
 }
 
 dependencies {
@@ -95,27 +90,12 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
-    testImplementation(libs.androidx.test.core)
-    testImplementation(libs.androidx.arch.core.testing)
-    testImplementation(libs.junit.jupiter.api)
-    testImplementation(libs.junit.jupiter.params)
-    testImplementation(libs.mockito.junit.jupiter)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.mockk)
-
-    androidTestImplementation(libs.android.test.runner)
-    androidTestImplementation(libs.android.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.android.test.rules)
-    androidTestImplementation(libs.mockito.android)
-    androidTestImplementation(libs.kotlinx.coroutines.test)
-
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.bundles.compose.debug.android)
+    // Testing
+    androidTestImplementation(libs.bundles.ui.test)
     debugImplementation(libs.bundles.compose.debug)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
 
-    androidTestImplementation(libs.junit.jupiter)
-    androidTestImplementation(libs.junit5.android.test.core)
-    androidTestRuntimeOnly(libs.junit5.android.test.runner)
+    androidTestRuntimeOnly(libs.android.test.runner)
+    testImplementation(libs.bundles.unit.test)
     testRuntimeOnly(libs.junit.jupiter.engine)
 }
