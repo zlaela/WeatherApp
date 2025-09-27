@@ -62,7 +62,7 @@ fun Home(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primary)
         ) {
-            WeatherCard(padding, weatherStates)
+            WeatherCard(weatherStates)
             FetchedCitiesListDropdown(onCitySelected, cityStates)
         }
     }
