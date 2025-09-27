@@ -17,5 +17,9 @@
 
     <string name="error">Error</string>
     <string name="failed_to_load_weather">Failed to load weather</string>
+    <string name="feels_like_c">Feels like %1$s°C</string>
+    <string name="high">High</string>
+    <string name="temp_c">%1$s°C</string>
+    <string name="low">Low</string>
     <string name="search_for_a_location">Search for a city to see weather</string>
 </resources>
