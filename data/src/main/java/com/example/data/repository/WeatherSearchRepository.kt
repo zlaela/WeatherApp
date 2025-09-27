@@ -5,8 +5,6 @@ import com.example.data.domain.City
 import com.example.data.domain.mapToCurrentWeather
 import com.example.data.domain.mapToForecast
 import com.example.data.search.WeatherResult
-import retrofit2.HttpException
-import java.net.UnknownHostException
 
 class WeatherSearchRepository(
     private val weatherApi: WeatherApi
@@ -28,11 +26,5 @@ class WeatherSearchRepository(
         }.getOrElse { throwable ->
             WeatherResult.Failure(reasonFor(throwable))
         }
-    }
-
-    fun reasonFor(throwable: Throwable) = when (throwable) {
-        is UnknownHostException ->  "Network error"
-        is HttpException -> "HTTP error ${throwable.code()}"
-        else -> "Network error"
     }
 }
