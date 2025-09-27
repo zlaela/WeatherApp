@@ -14,4 +14,6 @@
     <string name="content_desc_splash_screen">A splash screen showing an app icon</string>
     <string name="content_description_city_search_icon">Icon on the search bar that tries to fetch weather for the given location</string>
     <string name="content_description_current_location_icon">Icon of the shape of a location pin that attempts to get the device\'s current location when clicked</string>
+
+    <string name="search_for_a_location">Search for a city to see weather</string>
 </resources>
