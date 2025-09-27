@@ -4,12 +4,12 @@ import com.example.data.api.GeoApi
 import com.example.data.api.response.city.CityItem
 import com.example.data.domain.mapToCitiesList
 import com.example.data.domain.mapToCity
-import com.example.data.exception.HttpException
 import com.example.data.search.SearchState
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
@@ -71,7 +71,7 @@ class SearchRepositoryShould {
 
     @Test
     fun `return failure when API exception occurs`() = runBlocking {
-        coEvery { geoApi.searchZipAsync("") }.throws(HttpException())
+        coEvery { geoApi.searchZipAsync("") }.throws(mockk<retrofit2.HttpException>())
 
         // When the search is called with a term
         val expectedResult = repository.searchZip("")
