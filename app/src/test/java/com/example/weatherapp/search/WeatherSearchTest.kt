@@ -16,11 +16,13 @@ import com.example.weatherapp.SpyUiController
 import com.example.weatherapp.TestCoroutineDispatchers
 import com.example.weatherapp.TestHelpers
 import com.example.weatherapp.viewmodel.WeatherSearchViewModel
+import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import io.mockk.verifySequence
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.runBlocking
@@ -65,6 +67,11 @@ class WeatherSearchTest {
         val weatherRepository = WeatherSearchRepository(weatherApi)
         val dataStoreRepository = DataStoreRepository(dataSource)
 
+        // Mock the PreferencesDataSource methods that will be called
+        coEvery { dataSource.getPreferences() } returns UserPreferences()
+        coEvery { dataSource.updateCity(any()) } coAnswers { mockk() }
+        coEvery { dataSource.updateCountry(any()) } coAnswers { mockk() }
+
         weatherSearchViewModel =
             WeatherSearchViewModel(dispatchers, weatherRepository, dataStoreRepository)
         uiController = WeatherSearchUiController().also {
@@ -74,6 +81,9 @@ class WeatherSearchTest {
 
     @Test
     fun `looks for saved city in prefs on startup`() = runBlocking {
+
+        clearMocks(dataSource)
+
         val emptyPrefs = UserPreferences()
         coEvery { dataSource.getPreferences() }.answers { emptyPrefs }
 
@@ -91,7 +101,13 @@ class WeatherSearchTest {
 
     @Test
     fun `updates weather for last location if found on startup`() = runBlocking {
+        clearMocks(dataSource)
+
         val cityPrefs = UserPreferences(null, someCity.name, someCity.lat, someCity.lon)
+        coEvery { dataSource.getPreferences() } returns cityPrefs
+        coEvery { dataSource.updateCity(any()) } coAnswers { mockk() }
+        coEvery { dataSource.updateCountry(any()) } coAnswers { mockk() }
+
         val expectedWeather = setUpWeatherResults()
 
         // Mimic datastore returns prefs
@@ -191,10 +207,12 @@ class WeatherSearchTest {
                     is DataStoreState.GetPreferencesSuccess -> {
                         dataStoreState.city
                             ?.let { nnCity ->
+                                println("Got city: $nnCity")
                                 viewModel.getWeatherFor(nnCity)
                             }
                     }
                     else -> {
+                        println("No success datastore")
                         /** TODO: Nothing for now. Maybe device location search? */
                     }
                 }
