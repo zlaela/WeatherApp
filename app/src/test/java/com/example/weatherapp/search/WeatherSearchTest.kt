@@ -169,7 +169,7 @@ class WeatherSearchTest {
         }.coAnswers { forecastDeferred }
         coEvery { forecastDeferred.await() }.coAnswers { expectedForecastResponse }
 
-        weatherSearchViewModel.weatherLiveData.observeForever(weatherLiveDataObserver)
+        weatherSearchViewModel.forecastLivedata.observeForever(weatherLiveDataObserver)
 
         return expectedForecastResponse.mapToForecast()
     }
