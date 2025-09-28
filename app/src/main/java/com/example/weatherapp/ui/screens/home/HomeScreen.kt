@@ -1,10 +1,13 @@
 package com.example.weatherapp.ui.screens.home
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
@@ -42,6 +45,7 @@ fun HomeScreen(
         cityStates = cityStates,
         weatherStates = weatherStates,
         forecastStates = forecastStates,
+        doRefresh = { weatherSearchViewModel.refreshWeatherAndForecast() },
         topBar = {
             CitySearchAppBar(
                 citySearchViewModel = citySearchViewModel, cityStates = cityStates
@@ -50,6 +54,7 @@ fun HomeScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Home(
     cityStates: State<SearchState>,
@@ -57,22 +62,37 @@ fun Home(
     forecastStates: State<ForecastResult>,
     onCitySelected: (City) -> Unit,
     topBar: @Composable () -> Unit,
+    doRefresh: () -> Unit = {},
 ) {
+    val state = rememberPullToRefreshState()
+    val isRefreshing = weatherStates.value is WeatherResult.Loading ||
+            forecastStates.value is ForecastResult.Loading
+
     Scaffold(
         modifier = Modifier.testTag(TestTags.MAIN),
         topBar = { topBar() },
     ) { padding ->
-        Box(
+        Column(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
                 .padding(12.dp)
         ) {
-            Column(modifier = Modifier) {
-                WeatherCard(weatherStates)
-                ForecastCard(forecastStates = forecastStates)
+            PullToRefreshBox(
+                modifier = Modifier,
+                isRefreshing = isRefreshing,
+                onRefresh = { doRefresh() },
+                state = state
+            ) {
+                    LazyColumn {
+                        item {
+                            WeatherCard(weatherStates)
+                            ForecastCard(forecastStates = forecastStates)
+                        }
+                    }
+                // Keep this outside the refreshing check so it clears on click
+                FetchedCitiesListDropdown(onCitySelected, cityStates)
             }
-            FetchedCitiesListDropdown(onCitySelected, cityStates)
         }
     }
 }
