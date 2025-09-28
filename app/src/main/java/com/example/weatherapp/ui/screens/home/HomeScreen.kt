@@ -1,7 +1,7 @@
 package com.example.weatherapp.ui.screens.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +11,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.data.domain.City
@@ -18,6 +19,7 @@ import com.example.data.search.ForecastResult
 import com.example.data.search.SearchState
 import com.example.data.search.WeatherResult
 import com.example.weatherapp.ui.TestTags
+import com.example.weatherapp.ui.composable.ForecastCard
 import com.example.weatherapp.viewmodel.CitySearchViewModel
 import com.example.weatherapp.viewmodel.WeatherSearchViewModel
 
@@ -61,13 +63,15 @@ fun Home(
         modifier = Modifier.testTag(TestTags.MAIN),
         topBar = { topBar() },
     ) { padding ->
-        Box(
+        Column(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primary)
+                .padding(12.dp)
         ) {
             WeatherCard(weatherStates)
+            ForecastCard(forecastStates = forecastStates)
             FetchedCitiesListDropdown(onCitySelected, cityStates)
         }
     }
