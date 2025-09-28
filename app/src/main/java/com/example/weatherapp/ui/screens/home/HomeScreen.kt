@@ -1,10 +1,9 @@
 package com.example.weatherapp.ui.screens.home
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -63,15 +62,16 @@ fun Home(
         modifier = Modifier.testTag(TestTags.MAIN),
         topBar = { topBar() },
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primary)
                 .padding(12.dp)
         ) {
-            WeatherCard(weatherStates)
-            ForecastCard(forecastStates = forecastStates)
+            Column(modifier = Modifier) {
+                WeatherCard(weatherStates)
+                ForecastCard(forecastStates = forecastStates)
+            }
             FetchedCitiesListDropdown(onCitySelected, cityStates)
         }
     }
