@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.data.domain.City
+import com.example.data.search.ForecastResult
 import com.example.data.search.SearchState
 import com.example.data.search.WeatherResult
 import com.example.weatherapp.ui.TestTags
@@ -28,15 +29,18 @@ fun HomeScreen(
 ) {
     val onCitySelected: (City) -> Unit = { selectedCity ->
         weatherSearchViewModel.getWeatherFor(selectedCity)
+        weatherSearchViewModel.getForecast(selectedCity)
     }
 
     val weatherStates = weatherSearchViewModel.weatherLiveData.observeAsState(WeatherResult.Initial)
+    val forecastStates = weatherSearchViewModel.forecastLivedata.observeAsState(ForecastResult.Initial)
     val cityStates = citySearchViewModel.searchLiveData.observeAsState(SearchState.Initial)
 
     Home(
         onCitySelected = onCitySelected,
         cityStates = cityStates,
         weatherStates = weatherStates,
+        forecastStates = forecastStates,
         topBar = {
             CitySearchAppBar(
                 citySearchViewModel = citySearchViewModel, cityStates = cityStates
@@ -49,6 +53,7 @@ fun HomeScreen(
 fun Home(
     cityStates: State<SearchState>,
     weatherStates: State<WeatherResult>,
+    forecastStates: State<ForecastResult>,
     onCitySelected: (City) -> Unit,
     topBar: @Composable () -> Unit,
 ) {

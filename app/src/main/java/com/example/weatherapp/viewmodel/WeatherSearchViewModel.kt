@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.domain.City
 import com.example.data.repository.DataStoreRepository
 import com.example.data.repository.WeatherSearchRepository
+import com.example.data.search.ForecastResult
 import com.example.data.search.WeatherResult
 import com.example.data.store.DataStoreState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,8 +21,8 @@ class WeatherSearchViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository,
 ) : CoroutineViewModel(dispatchers) {
 
-    private val _forecastLivedata = MutableLiveData<WeatherResult>()
-    val forecastLivedata: LiveData<WeatherResult> = _forecastLivedata
+    private val _forecastLivedata = MutableLiveData<ForecastResult>()
+    val forecastLivedata: LiveData<ForecastResult> = _forecastLivedata
 
     private val _weatherLiveData = MutableLiveData<WeatherResult>()
     val weatherLiveData: LiveData<WeatherResult> = _weatherLiveData
@@ -65,14 +66,14 @@ class WeatherSearchViewModel @Inject constructor(
         }
     }
 
-    private fun searchForecast(doAsync: suspend () -> WeatherResult) {
-        _forecastLivedata.value = WeatherResult.Loading(true)
+    private fun searchForecast(doAsync: suspend () -> ForecastResult) {
+        _forecastLivedata.value = ForecastResult.Loading(true)
         launch(dispatchers.background + exceptionContext) {
             // on background thread
             val result = doAsync()
             // on ui thread
             launch(dispatchers.ui) {
-                _forecastLivedata.value = WeatherResult.Loading(false)
+                _forecastLivedata.value = ForecastResult.Loading(false)
                 _forecastLivedata.value = result
             }
         }

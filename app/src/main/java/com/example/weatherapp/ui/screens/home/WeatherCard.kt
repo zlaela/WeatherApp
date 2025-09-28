@@ -46,7 +46,6 @@ fun WeatherCard(
         when (val state = weatherStates.value) {
             WeatherResult.Initial -> InitialWeatherState()
             is WeatherResult.Failure -> ErrorWeatherState(state.reason)
-            is WeatherResult.ForecastSuccess -> {}
             is WeatherResult.Loading -> LoadingWeatherState()
             is WeatherResult.WeatherSuccess -> SuccessWeatherState(state.locationWeather)
         }
