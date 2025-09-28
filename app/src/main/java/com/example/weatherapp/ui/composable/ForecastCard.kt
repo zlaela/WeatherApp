@@ -138,15 +138,13 @@ private fun ErrorForecastState(reason: String) {
 
 @Composable
 private fun ForecastState(locationForecasts: List<DayNightForecast>) {
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(locationForecasts.size) { idx ->
-            val forecast = locationForecasts[idx]
-            // date/ day of week
+        locationForecasts.forEach { forecast ->
             Text(
                 text = forecast.dateString,
                 style = MaterialTheme.typography.titleLarge,
