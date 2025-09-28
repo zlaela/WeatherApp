@@ -6,6 +6,7 @@ An Android weather application built with Jetpack Compose that provides current 
 - 5-Day Forecast: Extended weather predictions with day/night temperature variations
 - City Search: Search and select cities with autocomplete functionality
 - Data Persistence: Remembers the last searched city using DataStore
+- Pull to refresh: Updates the weather and forecast for the current location
 
 ## Architecture
 - `app` module: UI layer with Compose screens, ViewModels, and navigation
