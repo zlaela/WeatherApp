@@ -53,6 +53,15 @@ class WeatherSearchViewModel @Inject constructor(
         }
     }
 
+    fun refreshWeatherAndForecast() {
+        viewModelScope.launch {
+            dataStoreRepository.getStoredCity()?.let { city ->
+                getWeatherFor(city)
+                getForecast(city)
+            }
+        }
+    }
+
     private fun getWeatherAndForecastFromPrefs() {
         viewModelScope.launch {
             dataStoreRepository.getStoredCity()?.let {
