@@ -26,4 +26,13 @@
     <string name="loading_weather">Loading weather...</string>
     <string name="deg_c">°C</string>
     <string name="deg_f">°F</string>
+
+<!--Forecast-->
+    <string name="forecast_pending">Forecast Pending</string>
+    <string name="loading_forecast">Loading Forecast...</string>
+    <string name="failed_to_load_forecast">Failed to load forecast</string>
+
+    <string name="humidity_pct">Humidity: %d%%</string>
+    <string name="chance_rain_pct">Chance of Rain: %d%%</string>
+    <string name="weather_icon">Weather icon</string>
 </resources>

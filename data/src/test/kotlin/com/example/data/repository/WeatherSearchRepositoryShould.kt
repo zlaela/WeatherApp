@@ -6,8 +6,10 @@ import com.example.data.api.response.weather.CurrentWeatherResponse
 import com.example.data.api.response.weather.FiveDayForecastResponse
 import com.example.data.domain.City
 import com.example.data.domain.mapToCurrentWeather
+import com.example.data.domain.mapToDayNightForecast
 import com.example.data.domain.mapToForecast
 import com.example.data.exception.HttpException
+import com.example.data.search.ForecastResult
 import com.example.data.search.WeatherResult
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -58,7 +60,7 @@ class WeatherSearchRepositoryShould {
     @Test
     fun `return forecast for a city when search succeeds`() = runBlocking {
         val expectedResponse = getForecastResponse()
-        val expectedForecast = expectedResponse.mapToForecast()
+        val expectedForecast = expectedResponse.mapToForecast().mapToDayNightForecast()
 
         coEvery { weatherApi.getForecast(someCity.lat, someCity.lon) }.coAnswers { forecastDeferred }
         coEvery { forecastDeferred.await() }.coAnswers { expectedResponse }
@@ -67,7 +69,7 @@ class WeatherSearchRepositoryShould {
         val forecast = repository.getForecast(someCity)
 
         // The repository returns he forecast
-        assertEquals(forecast, WeatherResult.ForecastSuccess(expectedForecast))
+        assertEquals(forecast, ForecastResult.ForecastSuccess(expectedForecast))
     }
 
     @Test

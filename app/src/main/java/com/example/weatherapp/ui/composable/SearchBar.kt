@@ -58,6 +58,7 @@ fun SearchBar(
             }
         },
         singleLine = true,
+        maxLines = 1,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Done

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.domain.City
 import com.example.data.repository.DataStoreRepository
 import com.example.data.repository.WeatherSearchRepository
+import com.example.data.search.ForecastResult
 import com.example.data.search.WeatherResult
 import com.example.data.store.DataStoreState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +21,9 @@ class WeatherSearchViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository,
 ) : CoroutineViewModel(dispatchers) {
 
+    private val _forecastLivedata = MutableLiveData<ForecastResult>()
+    val forecastLivedata: LiveData<ForecastResult> = _forecastLivedata
+
     private val _weatherLiveData = MutableLiveData<WeatherResult>()
     val weatherLiveData: LiveData<WeatherResult> = _weatherLiveData
 
@@ -28,18 +32,12 @@ class WeatherSearchViewModel @Inject constructor(
     }
 
     init {
-        viewModelScope.launch {
-            dataStoreRepository.getStoredCity()?.let {
-                asyncSearch {
-                    weatherRepository.getCurrentWeather(it)
-                }
-            }
-        }
+        getWeatherAndForecastFromPrefs()
     }
 
     fun getWeatherFor(someCity: City) {
         viewModelScope.launch {
-            asyncSearch {
+            searchWeather {
                 updatePrefs(someCity)
                 weatherRepository.getCurrentWeather(someCity)
             }
@@ -48,14 +46,40 @@ class WeatherSearchViewModel @Inject constructor(
 
     fun getForecast(someCity: City) {
         viewModelScope.launch {
-            asyncSearch {
+            searchForecast {
                 updatePrefs(someCity)
                 weatherRepository.getForecast(someCity)
             }
         }
     }
 
-    private fun asyncSearch(doAsync: suspend () -> WeatherResult) {
+    private fun getWeatherAndForecastFromPrefs() {
+        viewModelScope.launch {
+            dataStoreRepository.getStoredCity()?.let {
+                searchWeather {
+                    weatherRepository.getCurrentWeather(it)
+                }
+                searchForecast {
+                    weatherRepository.getForecast(it)
+                }
+            }
+        }
+    }
+
+    private fun searchForecast(doAsync: suspend () -> ForecastResult) {
+        _forecastLivedata.value = ForecastResult.Loading(true)
+        launch(dispatchers.background + exceptionContext) {
+            // on background thread
+            val result = doAsync()
+            // on ui thread
+            launch(dispatchers.ui) {
+                _forecastLivedata.value = ForecastResult.Loading(false)
+                _forecastLivedata.value = result
+            }
+        }
+    }
+
+    private fun searchWeather(doAsync: suspend () -> WeatherResult) {
         _weatherLiveData.value = WeatherResult.Loading(true)
         launch(dispatchers.background + exceptionContext) {
             // on background thread

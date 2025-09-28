@@ -8,5 +8,7 @@ data class Forecast(
     val partOfDay: String,
     val icon: String,
     val condition: String,
-    val description: String
+    val description: String,
+    val humidity: Int,
+    val chanceOfRain: Double,
 )
