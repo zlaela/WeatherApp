@@ -26,4 +26,8 @@
     <string name="loading_weather">Loading weather...</string>
     <string name="deg_c">°C</string>
     <string name="deg_f">°F</string>
+
+<!--Forecast-->
+    <string name="forecast_pending">Forecast Pending</string>
+    <string name="loading_forecast">Loading Forecast...</string>
 </resources>
