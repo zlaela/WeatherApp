@@ -2,6 +2,10 @@ package com.example.data.di
 
 import com.example.data.api.GeoApi
 import com.example.data.api.WeatherApi
+import com.example.data.dao.ForecastDao
+import com.example.data.dao.WeatherDao
+import com.example.data.cache.WeatherIconCacheManager
+import com.example.data.repository.CachedWeatherRepository
 import com.example.data.repository.DataStoreRepository
 import com.example.data.repository.SearchRepository
 import com.example.data.repository.WeatherSearchRepository
@@ -26,6 +30,15 @@ object RepositoryModule {
     fun provideWeatherSearchRepository(
         weatherApi: WeatherApi
     ) = WeatherSearchRepository(weatherApi)
+
+    @Provides
+    @Singleton
+    fun provideCachedWeatherRepository(
+        weatherApi: WeatherApi,
+        weatherDao: WeatherDao,
+        forecastDao: ForecastDao,
+        iconCacheManager: WeatherIconCacheManager
+    ): CachedWeatherRepository = CachedWeatherRepository(weatherApi, weatherDao, forecastDao, iconCacheManager)
 
     @Provides
     @Singleton
