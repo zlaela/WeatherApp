@@ -78,7 +78,7 @@ class WeatherSearchRepositoryShould {
         val result = repository.getForecast(someCity)
 
         // The repository returns a failure
-        assertEquals(result, WeatherResult.Failure("Bad"))
+        assertEquals(result, WeatherResult.Failure("Network error"))
     }
 
     private fun getWeatherResponse(): CurrentWeatherResponse =

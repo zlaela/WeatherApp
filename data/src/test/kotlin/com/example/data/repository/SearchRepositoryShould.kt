@@ -4,7 +4,6 @@ import com.example.data.api.GeoApi
 import com.example.data.api.response.city.CityItem
 import com.example.data.domain.mapToCitiesList
 import com.example.data.domain.mapToCity
-import com.example.data.exception.HttpException
 import com.example.data.search.SearchState
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -12,10 +11,12 @@ import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.runBlocking
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import retrofit2.Response
 
 @ExtendWith(MockKExtension::class)
 class SearchRepositoryShould {
@@ -71,12 +72,14 @@ class SearchRepositoryShould {
 
     @Test
     fun `return failure when API exception occurs`() = runBlocking {
-        coEvery { geoApi.searchZipAsync("") }.throws(HttpException())
+
+        val httpException = retrofit2.HttpException(Response.error<okhttp3.Response>(400, "Not Found".toResponseBody()))
+        coEvery { geoApi.searchZipAsync("") }.throws(httpException)
 
         // When the search is called with a term
         val expectedResult = repository.searchZip("")
 
         // The repository returns matching cities
-        assertEquals(expectedResult, SearchState.Failure("Failed"))
+        assertEquals(expectedResult, SearchState.Failure(reasonFor(httpException)))
     }
 }
