@@ -44,7 +44,9 @@ fun FiveDayForecastResponse.mapToForecast(): List<Forecast> =
                 it.partOfDay?.partOfDay ?: "",
                 it.weather?.first()?.icon ?: "",
                 it.weather?.first()?.main ?: "",
-                it.weather?.first()?.description ?: ""
+                it.weather?.first()?.description ?: "",
+                it.main?.humidity?: 0,
+                it.probabilityOfPrecip ?: 0.0
             ))
         }
         this
