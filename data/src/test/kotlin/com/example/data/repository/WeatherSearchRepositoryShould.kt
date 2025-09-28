@@ -6,6 +6,7 @@ import com.example.data.api.response.weather.CurrentWeatherResponse
 import com.example.data.api.response.weather.FiveDayForecastResponse
 import com.example.data.domain.City
 import com.example.data.domain.mapToCurrentWeather
+import com.example.data.domain.mapToDayNightForecast
 import com.example.data.domain.mapToForecast
 import com.example.data.exception.HttpException
 import com.example.data.search.ForecastResult
@@ -59,7 +60,7 @@ class WeatherSearchRepositoryShould {
     @Test
     fun `return forecast for a city when search succeeds`() = runBlocking {
         val expectedResponse = getForecastResponse()
-        val expectedForecast = expectedResponse.mapToForecast()
+        val expectedForecast = expectedResponse.mapToForecast().mapToDayNightForecast()
 
         coEvery { weatherApi.getForecast(someCity.lat, someCity.lon) }.coAnswers { forecastDeferred }
         coEvery { forecastDeferred.await() }.coAnswers { expectedResponse }
