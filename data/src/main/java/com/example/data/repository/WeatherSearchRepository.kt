@@ -4,6 +4,7 @@ import com.example.data.api.WeatherApi
 import com.example.data.domain.City
 import com.example.data.domain.mapToCurrentWeather
 import com.example.data.domain.mapToForecast
+import com.example.data.search.ForecastResult
 import com.example.data.search.WeatherResult
 
 class WeatherSearchRepository(
@@ -19,12 +20,12 @@ class WeatherSearchRepository(
         }
     }
 
-    override suspend fun getForecast(someCity: City): WeatherResult {
+    override suspend fun getForecast(someCity: City): ForecastResult {
         return runCatching {
             val result = weatherApi.getForecast(someCity.lat, someCity.lon).await()
-            WeatherResult.ForecastSuccess(result.mapToForecast())
+            ForecastResult.ForecastSuccess(result.mapToForecast())
         }.getOrElse { throwable ->
-            WeatherResult.Failure(reasonFor(throwable))
+            ForecastResult.Failure(reasonFor(throwable))
         }
     }
 }
