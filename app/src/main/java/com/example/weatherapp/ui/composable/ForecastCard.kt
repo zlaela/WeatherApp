@@ -1,13 +1,16 @@
 package com.example.weatherapp.ui.composable
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CircularProgressIndicator
@@ -20,8 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.data.domain.DayNightForecast
 import com.example.data.search.ForecastResult
 import com.example.weatherapp.R
 import com.example.weatherapp.ui.TestTags
@@ -38,7 +43,7 @@ fun ForecastCard(
         when (val state = forecastStates.value) {
             ForecastResult.Initial -> InitialForecastState()
             is ForecastResult.Failure -> ErrorForecastState(state.reason)
-            is ForecastResult.ForecastSuccess -> { /*TODO*/ }
+            is ForecastResult.ForecastSuccess -> { ForecastState(state.locationForecast) }
             is ForecastResult.Loading -> LoadingForecastState()
         }
     }
@@ -114,6 +119,48 @@ private fun ErrorForecastState(reason: String) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
+        }
+    }
+}
+
+@Composable
+private fun ForecastState(locationForecasts: List<DayNightForecast>) {
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(locationForecasts.size) { idx ->
+            val forecast = locationForecasts[idx]
+            // date/ day of week
+            Text(
+                text = forecast.dateString,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            DayNightForecastCard(dayNightForecast = forecast)
+        }
+    }
+}
+
+@Composable
+fun DayNightForecastCard(dayNightForecast: DayNightForecast) {
+    Row(
+        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        // Day forecast
+        dayNightForecast.dayForecast?.let { dayForecast ->
+            Text("$dayForecast", modifier = Modifier.width(50.dp))
+        }
+
+        // Divider
+        if (dayNightForecast.dayForecast != null && dayNightForecast.nightForecast != null) {
+            Spacer(modifier = Modifier.width(8.dp))
+        }
+
+        // Night forecast
+        dayNightForecast.nightForecast?.let { nightForecast ->
+            Text("$nightForecast", modifier = Modifier.width(50.dp))
         }
     }
 }
