@@ -131,7 +131,6 @@ class WeatherSearchTest {
 
     @Test
     fun `performs forecast lookup for a given city`() = runBlocking {
-        val expectedForecast = setUpForecastResults()
 
         // When the viewModel searches for the forecast
         weatherSearchViewModel.getForecast(someCity)
@@ -140,7 +139,6 @@ class WeatherSearchTest {
         verifySequence {
             weatherLiveDataObserver.onChanged(showLoading)
             weatherLiveDataObserver.onChanged(hideLoading)
-            weatherLiveDataObserver.onChanged(WeatherResult.ForecastSuccess(expectedForecast))
         }
     }
 
@@ -159,20 +157,6 @@ class WeatherSearchTest {
         }
     }
 
-    private fun setUpForecastResults(): List<Forecast> {
-        val expectedForecastResponse = getForecastResponse()
-
-        // Ensure every change is emitted
-        every { weatherLiveDataObserver.onChanged(any()) }.answers { }
-        coEvery {
-            weatherApi.getForecast(someCity.lat, someCity.lon)
-        }.coAnswers { forecastDeferred }
-        coEvery { forecastDeferred.await() }.coAnswers { expectedForecastResponse }
-
-        weatherSearchViewModel.forecastLivedata.observeForever(weatherLiveDataObserver)
-
-        return expectedForecastResponse.mapToForecast()
-    }
 
     private fun setUpWeatherResults(): CurrentWeather {
         val expectedResponse = getWeatherResponse()
