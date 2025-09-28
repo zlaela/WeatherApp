@@ -52,10 +52,24 @@ class ForecastCardTest {
         assertEquals("Loading Forecast...", result)
     }
 
+    @Test
+    fun `displays error state when forecast fetch fails`() {
+        // Given error state
+        val errorReason = "Network error"
+        forecastStates = mutableStateOf(ForecastResult.Failure(errorReason))
+
+        // When ForecastCard is created
+        val result = getTextFromForecastState(forecastStates)
+
+        // Then it shows error message with reason
+        assertEquals("Failed to load forecast: $errorReason", result)
+    }
+
     private fun getTextFromForecastState(state: State<ForecastResult>): String =
         when (val forecastState = state.value) {
             ForecastResult.Initial -> "Forecast Pending"
             is ForecastResult.Loading -> "Loading Forecast..."
+            is ForecastResult.Failure -> "Failed to load forecast: ${forecastState.reason}"
             else -> ""
         }
 }

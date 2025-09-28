@@ -30,4 +30,5 @@
 <!--Forecast-->
     <string name="forecast_pending">Forecast Pending</string>
     <string name="loading_forecast">Loading Forecast...</string>
+    <string name="failed_to_load_forecast">Failed to load forecast</string>
 </resources>
