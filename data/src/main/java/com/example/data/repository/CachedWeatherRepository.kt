@@ -14,8 +14,6 @@ import com.example.data.domain.mapToDayNightForecast
 import com.example.data.domain.mapToForecast
 import com.example.data.search.ForecastResult
 import com.example.data.search.WeatherResult
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,15 +29,15 @@ class CachedWeatherRepository @Inject constructor(
         private const val CACHE_DURATION = 10 * 60 * 1000L // 10 minutes in milliseconds
     }
 
-    override suspend fun getCurrentWeather(someCity: City): WeatherResult = withContext(Dispatchers.IO) {
-        try {
+    override suspend fun getCurrentWeather(someCity: City): WeatherResult {
+        return try {
             // Check cache first
             val cachedWeather = weatherDao.getCurrentWeather(someCity.name)
             if (cachedWeather != null && isCacheValid(cachedWeather.cachedAt)) {
                 val currentWeather = cachedWeather.toCurrentWeather()
                 // Pre-cache the icon
                 iconCacheManager.getWeatherIcon(cachedWeather.icon)
-                return@withContext WeatherResult.WeatherSuccess(currentWeather)
+                WeatherResult.WeatherSuccess(currentWeather)
             }
 
             // Fetch from API
@@ -67,8 +65,8 @@ class CachedWeatherRepository @Inject constructor(
         }
     }
 
-    override suspend fun getForecast(someCity: City): ForecastResult = withContext(Dispatchers.IO) {
-        try {
+    override suspend fun getForecast(someCity: City): ForecastResult {
+        return try {
             // Check cache first
             val cachedForecast = forecastDao.getForecast(someCity.name)
             if (cachedForecast.isNotEmpty() && isCacheValid(cachedForecast.first().cachedAt)) {
@@ -77,7 +75,7 @@ class CachedWeatherRepository @Inject constructor(
                 forecast.forEach { forecastItem ->
                     iconCacheManager.getWeatherIcon(forecastItem.icon)
                 }
-                return@withContext ForecastResult.ForecastSuccess(forecast.mapToDayNightForecast())
+                ForecastResult.ForecastSuccess(forecast.mapToDayNightForecast())
             }
 
             // Fetch from API
@@ -113,14 +111,14 @@ class CachedWeatherRepository @Inject constructor(
         return System.currentTimeMillis() - cachedAt < CACHE_DURATION
     }
 
-    suspend fun clearExpiredCache() = withContext(Dispatchers.IO) {
+    suspend fun clearExpiredCache() {
         val expiredTimestamp = System.currentTimeMillis() - CACHE_DURATION
         weatherDao.deleteExpiredCurrentWeather(expiredTimestamp)
         forecastDao.deleteExpiredForecast(expiredTimestamp)
         iconCacheManager.clearExpiredIcons()
     }
 
-    suspend fun clearAllCache() = withContext(Dispatchers.IO) {
+    suspend fun clearAllCache() {
         // Note: This would need to be implemented in the DAOs
         // For now, we'll just clear expired cache
         clearExpiredCache()
