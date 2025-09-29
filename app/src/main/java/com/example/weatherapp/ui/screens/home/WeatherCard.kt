@@ -1,11 +1,11 @@
 package com.example.weatherapp.ui.screens.home
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,11 +36,13 @@ import com.example.weatherapp.utils.formatTemp
 @Composable
 fun WeatherCard(
     weatherStates: State<WeatherResult>,
+    animatedHeight: Float
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .testTag(TestTags.CITY_WEATHER),
+            .testTag(TestTags.CITY_WEATHER)
+            .height((animatedHeight * 280).dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         when (val state = weatherStates.value) {
@@ -106,6 +108,7 @@ private fun SuccessWeatherState(weather: com.example.data.domain.CurrentWeather)
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .fillMaxHeight()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
