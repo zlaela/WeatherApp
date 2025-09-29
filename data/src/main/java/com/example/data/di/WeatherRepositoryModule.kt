@@ -1,5 +1,6 @@
 package com.example.data.di
 
+import com.example.data.repository.CachedWeatherRepository
 import com.example.data.repository.WeatherRepository
 import dagger.Binds
 import dagger.Module
@@ -15,5 +16,5 @@ import dagger.hilt.android.components.ViewModelComponent
 interface WeatherRepositoryModule {
 
     @Binds
-    fun bindWeatherRepository(weatherRepository: WeatherRepository): WeatherRepository
+    fun bindWeatherRepository(cachedWeatherRepository: CachedWeatherRepository): WeatherRepository
 }
