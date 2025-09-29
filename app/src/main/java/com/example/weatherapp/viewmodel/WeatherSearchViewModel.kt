@@ -6,7 +6,7 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.data.domain.City
 import com.example.data.repository.DataStoreRepository
-import com.example.data.repository.WeatherSearchRepository
+import com.example.data.repository.WeatherRepository
 import com.example.data.search.ForecastResult
 import com.example.data.search.WeatherResult
 import com.example.data.store.DataStoreState
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WeatherSearchViewModel @Inject constructor(
     private val dispatchers: CoroutineDispatchers,
-    private val weatherRepository: WeatherSearchRepository,
+    private val weatherRepository: WeatherRepository,
     private val dataStoreRepository: DataStoreRepository,
 ) : CoroutineViewModel(dispatchers) {
 
