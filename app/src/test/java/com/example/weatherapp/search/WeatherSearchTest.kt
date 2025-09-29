@@ -7,6 +7,7 @@ import com.example.data.api.response.weather.FiveDayForecastResponse
 import com.example.data.domain.*
 import com.example.data.repository.DataStoreRepository
 import com.example.data.repository.WeatherSearchRepository
+import com.example.data.search.ForecastResult
 import com.example.data.search.WeatherResult
 import com.example.data.store.DataStoreState
 import com.example.data.store.PreferencesDataSource
@@ -53,10 +54,14 @@ class WeatherSearchTest {
 
     @MockK
     private lateinit var weatherLiveDataObserver: Observer<WeatherResult>
+    @MockK
+    private lateinit var forecastLiveDataObserver: Observer<ForecastResult>
 
     private val someCity: City = City("", "", "Chicago", 41.8755616, -87.6244212)
-    private val showLoading: WeatherResult = WeatherResult.Loading(true)
-    private val hideLoading: WeatherResult = WeatherResult.Loading(false)
+    private val showLoadingWeather: WeatherResult = WeatherResult.Loading(true)
+    private val hideLoadingWeather: WeatherResult = WeatherResult.Loading(false)
+    private val showLoadingForecast: ForecastResult = ForecastResult.Loading(true)
+    private val hideLoadingForecast: ForecastResult = ForecastResult.Loading(false)
     private lateinit var weatherSearchViewModel: WeatherSearchViewModel
 
     private lateinit var uiController: WeatherSearchUiController
@@ -123,22 +128,24 @@ class WeatherSearchTest {
 
         // And the viewmodel updates the weather for the city
         verifySequence {
-            weatherLiveDataObserver.onChanged(showLoading)
-            weatherLiveDataObserver.onChanged(hideLoading)
+            weatherLiveDataObserver.onChanged(showLoadingWeather)
+            weatherLiveDataObserver.onChanged(hideLoadingWeather)
             weatherLiveDataObserver.onChanged(WeatherResult.WeatherSuccess(expectedWeather))
         }
     }
 
     @Test
     fun `performs forecast lookup for a given city`() = runBlocking {
+        val expectedForecast = setUpForecastResults()
 
         // When the viewModel searches for the forecast
         weatherSearchViewModel.getForecast(someCity)
 
         // Verify that livedata emits loading state, weather result, and hide loading states in order
         verifySequence {
-            weatherLiveDataObserver.onChanged(showLoading)
-            weatherLiveDataObserver.onChanged(hideLoading)
+            forecastLiveDataObserver.onChanged(showLoadingForecast)
+            forecastLiveDataObserver.onChanged(hideLoadingForecast)
+            forecastLiveDataObserver.onChanged(ForecastResult.ForecastSuccess(expectedForecast))
         }
     }
 
@@ -151,12 +158,24 @@ class WeatherSearchTest {
 
         // Verify that livedata emits loading state, weather result, and hide loading states in order
         verifySequence {
-            weatherLiveDataObserver.onChanged(showLoading)
-            weatherLiveDataObserver.onChanged(hideLoading)
+            weatherLiveDataObserver.onChanged(showLoadingWeather)
+            weatherLiveDataObserver.onChanged(hideLoadingWeather)
             weatherLiveDataObserver.onChanged(WeatherResult.WeatherSuccess(expectedWeather))
         }
     }
 
+    private fun setUpForecastResults(): List<DayNightForecast> {
+        val expectedResponse = getForecastResponse()
+
+        // Ensure every change is emitted
+        every { forecastLiveDataObserver.onChanged(any()) }.answers { }
+        coEvery { weatherApi.getForecast(someCity.lat, someCity.lon) }.coAnswers { forecastDeferred }
+        coEvery { forecastDeferred.await() }.coAnswers { expectedResponse }
+        // Viewmodel updates subscribed
+        weatherSearchViewModel.forecastLivedata.observeForever(forecastLiveDataObserver)
+
+        return expectedResponse.mapToForecast().mapToDayNightForecast()
+    }
 
     private fun setUpWeatherResults(): CurrentWeather {
         val expectedResponse = getWeatherResponse()
@@ -171,11 +190,9 @@ class WeatherSearchTest {
         return expectedResponse.mapToCurrentWeather()
     }
 
-    // TODO: This is duplicated and should  be moved to a common testing package
     private fun getWeatherResponse(): CurrentWeatherResponse =
         TestHelpers.getWeatherResponse(CurrentWeatherResponse::class.java, "weather.json")
 
-    // TODO: This is duplicated and should  be moved to a common testing package
     private fun getForecastResponse(): FiveDayForecastResponse =
         TestHelpers.getWeatherResponse(FiveDayForecastResponse::class.java, "forecast.json")
 
